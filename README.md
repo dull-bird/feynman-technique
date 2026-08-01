@@ -39,6 +39,21 @@ python3 feynman-technique/scripts/feynman_log.py export --vault ~/Documents/MyVa
 
 生成 Obsidian 兼容笔记：每个概念一篇（frontmatter + 评分走势 + 会话链接）、每次会话一篇（含完整转写稿）、一篇总索引，可被 Dataview 查询，适合长期回顾。
 
+## 开发
+
+```bash
+# 启用提交前检查（每次 commit 自动跑端到端测试并重建 gallery 数据）
+git config core.hooksPath .githooks
+
+# 手动运行测试（需要 pexpect：python3 -m venv .venv && .venv/bin/pip install pexpect）
+.venv/bin/python feynman-technique/scripts/test_feynman_log.py
+
+# 手动重建网站 gallery 数据（sessions/ 有新对话后）
+python3 feynman-technique/scripts/build_gallery.py
+```
+
+学习记录（`sessions/`）不入库；gallery 展示数据由构建脚本从真实记录生成，随每次提交自动更新。
+
 ## 方法
 
 四步闭环：写下概念 → 讲给外行 → 识别盲区 → 简化类比，循环到顺畅为止。真懂的标准：能解释「为什么」，而不只是描述「是什么」。
