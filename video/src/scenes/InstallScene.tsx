@@ -4,8 +4,7 @@ import { COLORS, HAND } from "../theme";
 
 const MONO = "Menlo, 'SF Mono', 'Courier New', monospace";
 
-const LINE1 = "$ git clone https://github.com/dull-bird/feynman-technique";
-const LINE2 = "$ cp -r feynman-technique ~/.agents/skills/feynman-technique";
+const LINE1 = "$ npx skills add dull-bird/feynman-technique -g";
 
 /** 逐字打出一行终端命令（字符串切片打字机），带光标 */
 const TypedLine: React.FC<{
@@ -46,7 +45,7 @@ const TypedLine: React.FC<{
   );
 };
 
-/** 30–37s：安装场景——终端窗口逐字打出两行命令 */
+/** 30–37s：安装场景——终端窗口逐字打出单行 npx 命令 */
 export const InstallScene: React.FC = () => {
   const frame = useCurrentFrame();
 
@@ -56,7 +55,7 @@ export const InstallScene: React.FC = () => {
     easing: Easing.bezier(0.16, 1, 0.3, 1),
   });
 
-  const noteIn = interpolate(frame, [152, 168], [0, 1], {
+  const noteIn = interpolate(frame, [100, 116], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -85,13 +84,13 @@ export const InstallScene: React.FC = () => {
           }),
         }}
       >
-        三步装好你的听众
+        一行命令，装好听众
       </div>
 
       {/* 终端窗口 */}
       <div
         style={{
-          width: 1440,
+          width: 1160,
           borderRadius: 20,
           backgroundColor: "#122119",
           border: `2px solid ${COLORS.sage}44`,
@@ -147,12 +146,11 @@ export const InstallScene: React.FC = () => {
             whiteSpace: "pre",
           }}
         >
-          <TypedLine text={LINE1} start={24} duration={44} />
-          <TypedLine text={LINE2} start={84} duration={46} cursorAfter />
+          <TypedLine text={LINE1} start={24} duration={46} cursorAfter />
         </div>
       </div>
 
-      {/* 第三步：手写批注 */}
+      {/* 手写批注 */}
       <div
         style={{
           fontFamily: HAND,
@@ -162,7 +160,7 @@ export const InstallScene: React.FC = () => {
           translate: `0 ${(1 - noteIn) * 16}px`,
         }}
       >
-        ③ 然后开口——剩下的交给对话
+        装完就开口——剩下的交给对话
       </div>
     </div>
   );
