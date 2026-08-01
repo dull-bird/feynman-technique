@@ -4,7 +4,13 @@ video/node_modules/
 video/out/
 video/dist/
 .venv/
+__pycache__/
 .DS_Store
+
+# 配音中间产物（保留 scripts 与 segments.json，音频可重新生成）
+video/narration/segments/*.mp3
+video/narration/segments/*.wav
+video/narration/segments/resampled/
 
 # 个人学习记录不发布
 sessions/
