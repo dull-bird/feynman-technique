@@ -1,0 +1,10 @@
+# 依赖与构建产物
+node_modules/
+video/node_modules/
+video/out/
+video/dist/
+.venv/
+.DS_Store
+
+# 个人学习记录不发布
+sessions/

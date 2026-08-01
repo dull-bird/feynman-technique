@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>费曼学习法陪练 — 把「我以为我懂」讲成「我知道我懂」</title>
+  <meta name="description" content="一个住在你终端里的费曼学习法 AI 陪练：你讲，它问。扮演零基础听众连续追问，暴露知识盲区，并记录每次对话追踪进步。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=Zhi+Mang+Xing&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#top">跳到主要内容</a>
+
+  <header class="site-nav">
+    <a class="brand" href="#top">
+      <span class="brand-mark">?</span>
+      <span class="brand-name">费曼陪练</span>
+    </a>
+    <nav class="nav-links" aria-label="页面导航">
+      <a href="#method">四步闭环</a>
+      <a href="#transcript">对话实录</a>
+      <a href="#progress">进步追踪</a>
+      <a href="#install">开始使用</a>
+    </nav>
+    <a class="nav-github" href="https://github.com/dull-bird/feynman-technique" target="_blank" rel="noopener">GitHub ↗</a>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">一个住在你终端里的费曼学习法陪练</p>
+        <h1 class="hero-title">
+          把「我<del class="strike" data-once>以为</del>我懂」<br>
+          讲成「我<span class="underline-red">知道</span>我懂」
+        </h1>
+        <p class="hero-sub">
+          划重点、反复阅读，制造的是熟悉感，不是理解。这个 skill 让 AI
+          扮演一个零基础但逻辑严谨的听众：你负责讲，它负责追问——
+          一次只问一个为什么，直到你把概念讲得让外行也能复述。
+        </p>
+        <div class="install-snippet">
+          <code><span class="prompt">$</span> git clone https://github.com/dull-bird/feynman-technique.git</code>
+          <button class="copy-btn" data-copy="git clone https://github.com/dull-bird/feynman-technique.git" aria-label="复制安装命令">复制</button>
+        </div>
+        <p class="hero-note">然后对你的 agent 说一句：<em>「用费曼学习法，概念是复利」</em></p>
+      </div>
+
+      <!-- 签名元素：一本正在被红笔批改的笔记本 -->
+      <div class="notebook" role="img" aria-label="一段费曼学习法对话演示：讲解者被连续追问，暴露出盲区">
+        <div class="notebook-tape" aria-hidden="true"></div>
+        <p class="notebook-title">今日概念：复利 <span class="hand">——我最有信心的概念</span></p>
+        <ol class="dialogue" id="hero-dialogue">
+          <li class="msg msg-user" data-step>
+            <span class="who">你</span>
+            <p>复利就是钱生钱，利息会滚利息。</p>
+          </li>
+          <li class="msg msg-ai" data-step>
+            <span class="who">听众</span>
+            <p>「滚」具体是什么意思？第一年结束，账户里到底多了什么？</p>
+          </li>
+          <li class="msg msg-user" data-step>
+            <span class="who">你</span>
+            <p>多了 70 块……等等，第二年是 1070 的 7%，不是 1000 的。</p>
+          </li>
+          <li class="msg msg-ai" data-step>
+            <span class="who">听众</span>
+            <p>那为什么银行要平白给你钱？</p>
+          </li>
+          <li class="msg msg-user msg-stuck" data-step>
+            <span class="who">你</span>
+            <p>（卡壳）……这个我得回去查一下。</p>
+          </li>
+        </ol>
+        <div class="red-verdict" data-step>
+          <svg class="red-circle" viewBox="0 0 220 64" aria-hidden="true">
+            <path d="M12 34 C 30 8, 190 4, 208 28 C 218 44, 150 60, 92 58 C 40 56, 2 50, 12 34"
+                  fill="none" pathLength="1"/>
+          </svg>
+          <span class="hand">盲区 +1，已记入你的学习清单</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 痛点 strip ============ -->
+    <aside class="strip">
+      <p>读三遍产生的「眼熟」，会被大脑误报为「已掌握」<span class="strip-sep">·</span>熟悉感 ≠ 理解</p>
+    </aside>
+
+    <!-- ============ 四步闭环 ============ -->
+    <section class="method" id="method">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">方法</p>
+        <h2>四步闭环，循环到顺畅为止</h2>
+        <p class="section-sub">顺序本身就是信息：每一步都在为上一步暴露的问题兜底。</p>
+      </div>
+
+      <div class="loop-grid">
+        <article class="step-card" data-reveal>
+          <span class="step-no">1</span>
+          <h3>写下概念</h3>
+          <p>一次只攻一个概念。报出概念本身就是一种承诺：接下来三十分钟，注意力只属于它。</p>
+          <p class="step-guard hand">最自信的概念，最值得先测</p>
+        </article>
+        <article class="step-card" data-reveal>
+          <span class="step-no">2</span>
+          <h3>讲给外行</h3>
+          <p>任何术语都是作弊，任何跳步都是漏洞。验收标准不是对方点头，而是对方能复述。</p>
+          <p class="step-guard hand">「这个很明显」= 你没想通的地方</p>
+        </article>
+        <article class="step-card" data-reveal>
+          <span class="step-no">3</span>
+          <h3>识别盲区</h3>
+          <p>卡壳不是失败，是路线图。每一个「我其实不懂」都精确指出了下一步该学什么。</p>
+          <p class="step-guard hand">盲区是金矿，别糊弄过去</p>
+        </article>
+        <article class="step-card" data-reveal>
+          <span class="step-no">4</span>
+          <h3>简化类比</h3>
+          <p>删掉所有「让你显得聪明但不够清楚」的词。你妈能听懂吗？听不懂就重写。</p>
+          <p class="step-guard hand">术语是拐杖，机制才是腿</p>
+        </article>
+      </div>
+      <p class="loop-caption"><span class="loop-glyph" aria-hidden="true">↺</span> 回填盲区之后，回到第 2 步再讲一遍 —— 直到全程不卡壳。</p>
+    </section>
+
+    <!-- ============ 对话实录 ============ -->
+    <section class="transcript" id="transcript">
+      <div class="section-head">
+        <p class="eyebrow">实录</p>
+        <h2>一轮真实的追问长这样</h2>
+        <p class="section-sub">AI 不替你讲完，只复述和追问。每次只问一个最关键的问题。</p>
+      </div>
+
+      <div class="chalkboard">
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">你</span>
+          <p>营销漏斗就是把陌生人变成客户的<span class="chalk-term">转化路径</span>。</p>
+          <span class="chalk-mark hand">← 术语未解释</span>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">听众</span>
+          <p>「转化路径」是什么？陌生人走进来第一步踩到哪？</p>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">你</span>
+          <p>先看到内容，再留资，再被说服下单。</p>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">听众</span>
+          <p>为什么不能跳过前两步，直接让他买？</p>
+          <span class="chalk-mark hand">← 五岁小孩测试：只答「是什么」还不够</span>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">你</span>
+          <p>因为信任需要时间培养——没人把钱交给刚认识三秒的人。</p>
+          <span class="chalk-mark chalk-mark-good hand">← 答出「为什么」了 ✓</span>
+        </div>
+        <p class="chalk-verdict">五条通过标准：自己的话 · 讲清机制 · 因果链无跳步 · 有具体例子 · 接住一个迁移问题</p>
+      </div>
+    </section>
+
+    <!-- ============ 视频 ============ -->
+    <section class="video-section" id="video">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">短片</p>
+        <h2>30 秒看懂这个方法</h2>
+      </div>
+      <div class="video-frame">
+        <video src="assets/feynman-intro.mp4" controls muted loop playsinline preload="metadata">
+          你的浏览器不支持视频播放。
+        </video>
+      </div>
+    </section>
+
+    <!-- ============ 进步追踪 ============ -->
+    <section class="progress" id="progress">
+      <div class="section-head">
+        <p class="eyebrow">记录</p>
+        <h2>每次对话都被记下，进步看得见</h2>
+        <p class="section-sub">会话结束自动写入本地日志：轮数、评分、盲区。同一个概念的评分走势，就是理解增长曲线。</p>
+      </div>
+
+      <div class="report-card" data-reveal>
+        <div class="report-head">
+          <h3>学习记录册</h3>
+          <span class="hand">复利 · 第 4 次对话</span>
+        </div>
+        <table class="report-table">
+          <thead>
+            <tr><th scope="col">日期</th><th scope="col">概念</th><th scope="col">轮数</th><th scope="col">结果</th><th scope="col">评分</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>07-28</td><td>复利</td><td>8</td><td>未通过</td><td class="score score-low">2</td></tr>
+            <tr><td>07-30</td><td>复利</td><td>6</td><td>未通过</td><td class="score">3</td></tr>
+            <tr><td>08-01</td><td>复利</td><td>5</td><td>通过</td><td class="score">4</td></tr>
+            <tr class="row-best"><td>08-03</td><td>复利</td><td>4</td><td>通过</td><td class="score score-high">5</td></tr>
+          </tbody>
+        </table>
+        <div class="report-foot">
+          <svg class="sparkline" viewBox="0 0 120 40" aria-label="评分走势：2、3、4、5">
+            <polyline points="10,34 40,24 70,14 100,6" fill="none" pathLength="1"/>
+            <circle cx="100" cy="6" r="3"/>
+          </svg>
+          <p>评分走势 2 → 5 <span class="report-gap">反复盲区：<s>缺少具体例子</s> 已攻克</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 安装 ============ -->
+    <section class="install" id="install">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">开始</p>
+        <h2>三步，把听众装进终端</h2>
+      </div>
+      <ol class="install-steps">
+        <li data-reveal>
+          <span class="install-no">01</span>
+          <div>
+            <h3>克隆仓库</h3>
+            <div class="code-block"><code><span class="prompt">$</span> git clone https://github.com/dull-bird/feynman-technique.git</code></div>
+          </div>
+        </li>
+        <li data-reveal>
+          <span class="install-no">02</span>
+          <div>
+            <h3>装进 agent 的 skills 目录</h3>
+            <div class="code-block"><code><span class="prompt">$</span> cp -r feynman-technique ~/.agents/skills/feynman-technique</code></div>
+          </div>
+        </li>
+        <li data-reveal>
+          <span class="install-no">03</span>
+          <div>
+            <h3>报出一个你「自以为懂」的概念</h3>
+            <p class="install-quote">「用费曼学习法，概念是 <em>指数基金</em>」</p>
+            <p class="install-hint">挑你最有信心的那个——最大的盲区往往藏在那里。</p>
+          </div>
+        </li>
+      </ol>
+      <a class="cta" href="https://github.com/dull-bird/feynman-technique" target="_blank" rel="noopener">去 GitHub 看看 ↗</a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>费曼学习法陪练 · 你讲它问，直到真懂</p>
+    <p class="footer-fine">方法来自 Richard Feynman 的学习实践 · 页面与短片由 AI 生成</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
