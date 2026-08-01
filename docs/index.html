@@ -43,8 +43,8 @@
           一次只问一个为什么，直到你把概念讲得让外行也能复述。
         </p>
         <div class="install-snippet">
-          <code><span class="prompt">$</span> git clone https://github.com/dull-bird/feynman-technique.git</code>
-          <button class="copy-btn" data-copy="git clone https://github.com/dull-bird/feynman-technique.git" aria-label="复制安装命令">复制</button>
+          <code><span class="prompt">$</span> npx skills add dull-bird/feynman-technique -g</code>
+          <button class="copy-btn" data-copy="npx skills add dull-bird/feynman-technique -g" aria-label="复制安装命令">复制</button>
         </div>
         <p class="hero-note">然后对你的 agent 说一句：<em>「用费曼学习法，概念是复利」</em></p>
       </div>
@@ -214,25 +214,19 @@
     <section class="install" id="install">
       <div class="section-head">
         <p class="eyebrow eyebrow-chalk">开始</p>
-        <h2>三步，把听众装进终端</h2>
+        <h2>两步，把听众装进终端</h2>
       </div>
       <ol class="install-steps">
         <li data-reveal>
           <span class="install-no">01</span>
           <div>
-            <h3>克隆仓库</h3>
-            <div class="code-block"><code><span class="prompt">$</span> git clone https://github.com/dull-bird/feynman-technique.git</code></div>
+            <h3>用 skills CLI 安装</h3>
+            <div class="code-block"><code><span class="prompt">$</span> npx skills add dull-bird/feynman-technique -g</code></div>
+            <p class="install-hint">也可以 git clone 后把 <code>feynman-technique/</code> 子目录复制到 <code>~/.agents/skills/</code>。</p>
           </div>
         </li>
         <li data-reveal>
           <span class="install-no">02</span>
-          <div>
-            <h3>装进 agent 的 skills 目录</h3>
-            <div class="code-block"><code><span class="prompt">$</span> cp -r feynman-technique ~/.agents/skills/feynman-technique</code></div>
-          </div>
-        </li>
-        <li data-reveal>
-          <span class="install-no">03</span>
           <div>
             <h3>报出一个你「自以为懂」的概念</h3>
             <p class="install-quote">「用费曼学习法，概念是 <em>指数基金</em>」</p>

@@ -4,20 +4,28 @@
 
 **主页与 45 秒介绍短片：<https://dull-bird.github.io/feynman-technique/>**
 
-## 使用
+## 安装
+
+```bash
+npx skills add dull-bird/feynman-technique -g
+```
+
+或者手动安装：
 
 ```bash
 git clone https://github.com/dull-bird/feynman-technique.git
-cp -r feynman-technique ~/.agents/skills/feynman-technique
+cp -r feynman-technique/feynman-technique ~/.agents/skills/feynman-technique
 ```
 
 然后对你的 agent 说：「用费曼学习法，概念是 XX」。
 
 ## 结构
 
-- `SKILL.md` — 会话流程：启动 → 追问 → 盲区处理 → 通过判定 → 记录 → 查进度
-- `references/method.md` — 听众规则、五岁小孩测试、1–5 分评分标准、常见错误
-- `scripts/feynman_log.py` — 对话日志与进度报告（`log` / `report` 子命令，仅标准库）
+- `feynman-technique/` — skill 本体（npx skills 只安装这个目录）
+  - `SKILL.md` — 会话流程：启动 → 追问 → 盲区处理 → 通过判定 → 记录 → 查进度
+  - `references/method.md` — 听众规则、五岁小孩测试、1–5 分评分标准、常见错误
+  - `scripts/feynman_log.py` — 对话日志与进度报告（`log` / `report` 子命令，仅标准库）
+  - `scripts/test_feynman_log.py` — pexpect 端到端测试
 - `sessions/` — 本地对话记录（不入库）
 - `docs/` — GitHub Pages 网站
 - `video/` — Remotion 短片源码（产物在 `docs/assets/feynman-intro.mp4`）
