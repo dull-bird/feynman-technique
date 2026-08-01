@@ -1,0 +1,20 @@
+#!/bin/bash
+# 提交前检查：pexpect 端到端测试 + 重建 gallery 数据
+# 安装：git config core.hooksPath .githooks
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+VENV_PY=".venv/bin/python"
+if [ ! -x "$VENV_PY" ]; then
+  VENV_PY="python3"
+fi
+
+echo "pre-commit: 运行 feynman_log 端到端测试…"
+"$VENV_PY" feynman-technique/scripts/test_feynman_log.py
+
+echo "pre-commit: 重建 gallery 数据…"
+"$VENV_PY" feynman-technique/scripts/build_gallery.py
+git add docs/gallery-data.js
+
+echo "pre-commit: 全部通过 ✓"

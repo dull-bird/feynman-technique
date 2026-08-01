@@ -50,8 +50,10 @@ def parse_transcript(path):
 
 
 def main():
-    with open(LOG_FILE, encoding="utf-8") as f:
-        records = [json.loads(line) for line in f if line.strip()]
+    records = []
+    if os.path.exists(LOG_FILE):
+        with open(LOG_FILE, encoding="utf-8") as f:
+            records = [json.loads(line) for line in f if line.strip()]
 
     sessions = []
     for r in records:

@@ -5,6 +5,7 @@
 遵循 pexpect 可靠性规则：显式 encoding/timeout、每个 expect 都处理
 EOF 与 TIMEOUT、类型化异常携带 child.before 与退出状态、三段式关闭。
 """
+import json
 import os
 import shutil
 import signal
@@ -195,6 +196,24 @@ def test_export():
     shutil.rmtree(EXPORT_TEST_DIR, ignore_errors=True)
 
 
+def test_report_json():
+    out = run_cli(
+        ["report", "--json"],
+        [("JSON 输出", r"\"total_sessions\": 2")],
+    )
+    # run_cli 返回 before（JSON 之后的残余输出），完整校验直接再跑一次解析
+    import subprocess
+    result = subprocess.run(
+        [sys.executable, SCRIPT, "report", "--json"],
+        capture_output=True, text=True, check=True,
+    )
+    payload = json.loads(result.stdout)
+    if payload["total_sessions"] != 2 or payload["concepts"]["测试概念"]["scores"] != [4, 5]:
+        raise CLIError(f"JSON 内容不符：{result.stdout[:200]}")
+    if payload["concepts"]["测试概念"]["mastered"] is not True:
+        raise CLIError("JSON mastered 字段不符")
+
+
 TESTS = [
     test_log_success,
     test_log_history_trend,
@@ -202,6 +221,7 @@ TESTS = [
     test_log_invalid_score,
     test_report_empty,
     test_report_full,
+    test_report_json,
     test_missing_required_arg,
     test_log_with_transcript,
     test_export,

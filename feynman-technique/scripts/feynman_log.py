@@ -97,6 +97,36 @@ def cmd_report(args):
         print("还没有任何记录。先用 log 命令记录一次对话吧。")
         return
 
+    by_concept = defaultdict(list)
+    for r in records:
+        by_concept[r["concept"]].append(r)
+    gap_count = defaultdict(int)
+    for r in records:
+        for g in r.get("gaps", []):
+            gap_count[g] += 1
+    recurring = sorted(((g, c) for g, c in gap_count.items() if c > 1),
+                       key=lambda x: -x[1])
+
+    if getattr(args, "json", False):
+        payload = {
+            "total_sessions": len(records),
+            "total_passed": sum(1 for r in records if r.get("passed")),
+            "concepts": {
+                concept: {
+                    "sessions": len(rs),
+                    "scores": [x.get("score") for x in rs],
+                    "mastered": bool(rs[-1].get("passed")),
+                    "last_date": rs[-1]["date"],
+                    "gaps": sorted({g for x in rs for g in x.get("gaps", [])}),
+                    "notes": [x["notes"] for x in rs if x.get("notes")],
+                }
+                for concept, rs in by_concept.items()
+            },
+            "recurring_gaps": [{"gap": g, "count": c} for g, c in recurring],
+        }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return
+
     total = len(records)
     passed = sum(1 for r in records if r.get("passed"))
     scores = [r["score"] for r in records if r.get("score") is not None]
@@ -285,6 +315,8 @@ def main():
 
     p_report = sub.add_parser("report", help="查看进度报告")
     p_report.add_argument("--concept", help="只看某个概念")
+    p_report.add_argument("--json", action="store_true",
+                          help="输出机器可读 JSON（供会话准备阶段做历史联动）")
     p_report.set_defaults(func=cmd_report)
 
     p_export = sub.add_parser("export", help="导出为 Obsidian 兼容笔记")
