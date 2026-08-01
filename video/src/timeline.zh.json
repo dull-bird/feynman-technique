@@ -1,0 +1,91 @@
+{
+  "fps": 30,
+  "totalFrames": 4605,
+  "totalDurationSec": 153.5,
+  "scenes": [
+    {
+      "id": "method",
+      "startFrame": 0,
+      "durationFrames": 431,
+      "audioStartSec": 0.3,
+      "audioDurSec": 12.852
+    },
+    {
+      "id": "standard",
+      "startFrame": 431,
+      "durationFrames": 495,
+      "audioStartSec": 14.666666666666668,
+      "audioDurSec": 14.976
+    },
+    {
+      "id": "steps",
+      "startFrame": 926,
+      "durationFrames": 587,
+      "audioStartSec": 31.166666666666668,
+      "audioDurSec": 18.036
+    },
+    {
+      "id": "gap",
+      "startFrame": 1513,
+      "durationFrames": 291,
+      "audioStartSec": 50.73333333333333,
+      "audioDurSec": 8.172
+    },
+    {
+      "id": "system",
+      "startFrame": 1804,
+      "durationFrames": 309,
+      "audioStartSec": 60.43333333333333,
+      "audioDurSec": 8.784
+    },
+    {
+      "id": "usage",
+      "startFrame": 2113,
+      "durationFrames": 406,
+      "audioStartSec": 70.73333333333333,
+      "audioDurSec": 12.024
+    },
+    {
+      "id": "discipline",
+      "startFrame": 2519,
+      "durationFrames": 318,
+      "audioStartSec": 84.26666666666667,
+      "audioDurSec": 9.072
+    },
+    {
+      "id": "prepare",
+      "startFrame": 2837,
+      "durationFrames": 381,
+      "audioStartSec": 94.86666666666666,
+      "audioDurSec": 11.196
+    },
+    {
+      "id": "nl",
+      "startFrame": 3218,
+      "durationFrames": 472,
+      "audioStartSec": 107.56666666666666,
+      "audioDurSec": 14.22
+    },
+    {
+      "id": "card",
+      "startFrame": 3690,
+      "durationFrames": 291,
+      "audioStartSec": 123.3,
+      "audioDurSec": 8.172
+    },
+    {
+      "id": "gallery",
+      "startFrame": 3981,
+      "durationFrames": 338,
+      "audioStartSec": 133,
+      "audioDurSec": 9.756
+    },
+    {
+      "id": "ending",
+      "startFrame": 4319,
+      "durationFrames": 286,
+      "audioStartSec": 144.26666666666668,
+      "audioDurSec": 8.027781
+    }
+  ]
+}

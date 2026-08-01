@@ -1,4 +1,4 @@
-# 费曼学习法陪练（feynman-technique）
+# 费曼技巧 Feynman Technique（feynman-technique）
 
 [English README](README.en.md)
 

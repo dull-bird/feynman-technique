@@ -1,0 +1,14 @@
+[
+  { "id": "method", "text": "The Feynman Technique is a way of testing real understanding, by explaining ideas out loud. Fun fact —<#0.4#> it wasn't actually invented by Feynman himself. Later educators distilled it, from the way he taught." },
+  { "id": "standard", "text": "Its standard is brutal:<#0.3#> familiarity is not understanding. You highlight, you re-read, everything looks familiar — and your brain tells you: got it.<#0.4#> Only when you can explain it to a complete outsider, do you truly understand." },
+  { "id": "steps", "text": "The method has just four steps. Step one: write the concept down.<#0.2#> Step two: explain it to a layperson.<#0.2#> Step three: spot the gaps — wherever you get stuck, is exactly what you need to revisit.<#0.2#> Step four: simplify with analogies, until anyone can repeat it back. Then loop, until the whole thing flows." },
+  { "id": "gap", "text": "The method is great — but hard to practice.<#0.4#> Where do you find a listener, who's always available, knows nothing, and never stops asking questions?" },
+  { "id": "system", "text": "This skill turns the whole method into a system:<#0.3#> an AI that plays the listener, plus a set of scripts that record and track everything." },
+  { "id": "usage", "text": "Using it takes one sentence: you explain, it asks. Explain compound interest, and it asks —<#0.3#> why would a bank just hand you money? Explain it fully, and you pass. Fall short, and it shows you the gap." },
+  { "id": "discipline", "text": "It also enforces discipline:<#0.3#> a state machine watches over every step — prepare, probe, wrap up, log. Nothing skipped. Nothing out of order." },
+  { "id": "prepare", "text": "Before each session, it does its homework:<#0.3#> it researches the new concept, and reviews your history — wherever your old gaps were, that's where it pushes hardest." },
+  { "id": "nl", "text": "Everything is triggered in plain language. Ask, \"have I been improving?\" —<#0.3#> and you get your score trend. Say, \"export to Obsidian\" —<#0.3#> and every conversation becomes study notes. No programming required." },
+  { "id": "card", "text": "Every pass also becomes a review card:<#0.3#> your polished explanation, one analogy, and three transfer quizzes." },
+  { "id": "gallery", "text": "The site also hosts real conversations across five fields —<#0.3#> finance, AI, math, physics, and psychology. Some pass. Some crash and burn." },
+  { "id": "ending", "text": "Install it with one command: npx skills add.<#0.4#> Pick a concept you think you know — and start explaining." }
+]

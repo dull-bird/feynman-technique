@@ -1,4 +1,4 @@
-# Feynman Technique Coach (feynman-technique)
+# Feynman Technique (feynman-technique)
 
 [中文版 README](README.md)
 

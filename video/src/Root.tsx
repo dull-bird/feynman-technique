@@ -1,7 +1,8 @@
 import { Composition } from "remotion";
-import { FeynmanIntro } from "./Composition";
+import { FeynmanIntro, FeynmanIntroEn } from "./Composition";
 import "./index.css";
-import timeline from "./timeline.json";
+import timelineEn from "./timeline.en.json";
+import timelineZh from "./timeline.zh.json";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -9,7 +10,15 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="FeynmanIntro"
         component={FeynmanIntro}
-        durationInFrames={timeline.totalFrames}
+        durationInFrames={timelineZh.totalFrames}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="FeynmanIntroEn"
+        component={FeynmanIntroEn}
+        durationInFrames={timelineEn.totalFrames}
         fps={30}
         width={1920}
         height={1080}

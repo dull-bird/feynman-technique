@@ -1,6 +1,6 @@
 # AGENTS.md
 
-费曼学习法陪练 skill：用户向 AI 讲解概念，AI 扮演零基础听众连续追问、暴露盲区、记录进步。仓库同时包含 skill 本体、GitHub Pages 网站和 Remotion 介绍视频。
+费曼技巧（feynman-technique）skill：用户向 AI 讲解概念，AI 扮演零基础听众连续追问、暴露盲区、记录进步。仓库同时包含 skill 本体、GitHub Pages 网站和 Remotion 介绍视频。
 
 ## 结构
 

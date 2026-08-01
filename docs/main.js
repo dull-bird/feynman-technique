@@ -192,7 +192,7 @@
         details.appendChild(el("summary", null, STR.fullDialogue(s.messages.length)));
         var dlg = el("div", "g-dialogue");
         s.messages.forEach(function (m) {
-          var bubble = el("div", "g-msg " + (m.who === "你" ? "you" : "listener"));
+          var bubble = el("div", "g-msg " + (m.who === "you" ? "you" : "listener"));
           bubble.appendChild(el("span", "g-who", m.who));
           bubble.appendChild(document.createTextNode(m.text));
           dlg.appendChild(bubble);
