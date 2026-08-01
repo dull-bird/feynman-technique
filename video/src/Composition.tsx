@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Sequence } from "remotion";
+import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import { SceneFade } from "./components/Chalk";
 import { LoopScene } from "./scenes/LoopScene";
 import { InstallScene } from "./scenes/InstallScene";
@@ -13,6 +13,9 @@ import { COLORS } from "./theme";
 export const FeynmanIntro: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.board }}>
+      {/* 中文配音（阿里云 NLS TTS，stanley） */}
+      <Audio src={staticFile("narration.mp3")} />
+
       {/* 0–4s 片头 */}
       <Sequence durationInFrames={120}>
         <SceneFade durationInFrames={120}>
