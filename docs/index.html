@@ -21,6 +21,7 @@
     <nav class="nav-links" aria-label="页面导航">
       <a href="#method">四步闭环</a>
       <a href="#transcript">对话实录</a>
+      <a href="#gallery">真实对话</a>
       <a href="#progress">进步追踪</a>
       <a href="#install">开始使用</a>
     </nav>
@@ -176,6 +177,17 @@
       </div>
     </section>
 
+    <!-- ============ 真实对话 gallery ============ -->
+    <section class="gallery" id="gallery">
+      <div class="section-head">
+        <p class="eyebrow">真实记录</p>
+        <h2>五个领域，六场真实对话</h2>
+        <p class="section-sub">这些不是演示文案——每一场都是按听众规则真实进行的追问，落账在本地日志里，点开就能读全程。</p>
+      </div>
+      <div class="chips" id="gallery-chips" role="tablist" aria-label="按领域筛选"></div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </section>
+
     <!-- ============ 进步追踪 ============ -->
     <section class="progress" id="progress">
       <div class="section-head">
@@ -184,29 +196,38 @@
         <p class="section-sub">会话结束自动写入本地日志：轮数、评分、盲区。同一个概念的评分走势，就是理解增长曲线。</p>
       </div>
 
-      <div class="report-card" data-reveal>
+      <div class="report-card" data-reveal id="progress-card">
         <div class="report-head">
           <h3>学习记录册</h3>
-          <span class="hand">复利 · 第 4 次对话</span>
+          <span class="hand" id="progress-summary"></span>
         </div>
         <table class="report-table">
           <thead>
-            <tr><th scope="col">日期</th><th scope="col">概念</th><th scope="col">轮数</th><th scope="col">结果</th><th scope="col">评分</th></tr>
+            <tr><th scope="col">概念</th><th scope="col">领域</th><th scope="col">次数</th><th scope="col">评分走势</th><th scope="col">状态</th></tr>
           </thead>
-          <tbody>
-            <tr><td>07-28</td><td>复利</td><td>8</td><td>未通过</td><td class="score score-low">2</td></tr>
-            <tr><td>07-30</td><td>复利</td><td>6</td><td>未通过</td><td class="score">3</td></tr>
-            <tr><td>08-01</td><td>复利</td><td>5</td><td>通过</td><td class="score">4</td></tr>
-            <tr class="row-best"><td>08-03</td><td>复利</td><td>4</td><td>通过</td><td class="score score-high">5</td></tr>
-          </tbody>
+          <tbody id="progress-tbody"></tbody>
         </table>
         <div class="report-foot">
-          <svg class="sparkline" viewBox="0 0 120 40" aria-label="评分走势：2、3、4、5">
-            <polyline points="10,34 40,24 70,14 100,6" fill="none" pathLength="1"/>
-            <circle cx="100" cy="6" r="3"/>
-          </svg>
-          <p>评分走势 2 → 5 <span class="report-gap">反复盲区：<s>缺少具体例子</s> 已攻克</span></p>
+          <svg class="sparkline" id="progress-sparkline" viewBox="0 0 120 40" aria-label="评分走势"></svg>
+          <p id="progress-trend"></p>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ 导出到 Obsidian ============ -->
+    <section class="export" id="export">
+      <div class="section-head">
+        <p class="eyebrow">长期回顾</p>
+        <h2>学习记录可以导出，住进你的 Obsidian</h2>
+        <p class="section-sub">一条命令，把全部对话导成 Obsidian 兼容笔记：每个概念一篇、每次会话一篇（含完整转写稿）、外加总索引，frontmatter + wikilink，Dataview 直接可查。</p>
+      </div>
+      <div class="export-panel" data-reveal>
+        <div class="code-block"><code><span class="prompt">$</span> python3 feynman-technique/scripts/feynman_log.py export --vault ~/Documents/MyVault/费曼学习</code></div>
+        <ul class="export-list">
+          <li><strong>概念笔记</strong>掌握状态、评分走势、历次会话链接</li>
+          <li><strong>会话笔记</strong>日期、轮数、盲区、完整对话实录</li>
+          <li><strong>总索引</strong>按掌握状态分组，一眼看到哪些还欠着</li>
+        </ul>
       </div>
     </section>
 
@@ -244,6 +265,7 @@
     <p class="footer-fine">方法来自 Richard Feynman 的学习实践 · 页面与短片由 AI 生成</p>
   </footer>
 
+  <script src="gallery-data.js"></script>
   <script src="main.js"></script>
 </body>
 </html>

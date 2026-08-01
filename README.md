@@ -24,11 +24,20 @@ cp -r feynman-technique/feynman-technique ~/.agents/skills/feynman-technique
 - `feynman-technique/` — skill 本体（npx skills 只安装这个目录）
   - `SKILL.md` — 会话流程：启动 → 追问 → 盲区处理 → 通过判定 → 记录 → 查进度
   - `references/method.md` — 听众规则、五岁小孩测试、1–5 分评分标准、常见错误
-  - `scripts/feynman_log.py` — 对话日志与进度报告（`log` / `report` 子命令，仅标准库）
+  - `scripts/feynman_log.py` — 对话日志与进度报告（`log` / `report` / `export` 子命令，仅标准库）
   - `scripts/test_feynman_log.py` — pexpect 端到端测试
+  - `scripts/build_gallery.py` — 从真实记录生成网站 gallery 数据
 - `sessions/` — 本地对话记录（不入库）
-- `docs/` — GitHub Pages 网站
+- `docs/` — GitHub Pages 网站（含真实对话 gallery）
 - `video/` — Remotion 短片源码（产物在 `docs/assets/feynman-intro.mp4`）
+
+## 导出到 Obsidian
+
+```bash
+python3 feynman-technique/scripts/feynman_log.py export --vault ~/Documents/MyVault/费曼学习
+```
+
+生成 Obsidian 兼容笔记：每个概念一篇（frontmatter + 评分走势 + 会话链接）、每次会话一篇（含完整转写稿）、一篇总索引，可被 Dataview 查询，适合长期回顾。
 
 ## 方法
 

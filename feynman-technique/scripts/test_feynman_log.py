@@ -16,6 +16,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.path.join(HERE, "feynman_log.py")
 LOG_FILE = os.path.join(HERE, "..", "sessions", "log.jsonl")
 BACKUP = LOG_FILE + ".test-backup"
+TRANSCRIPTS_DIR = os.path.join(HERE, "..", "sessions", "transcripts")
+TRANSCRIPTS_BACKUP = TRANSCRIPTS_DIR + ".test-backup"
+EXPORT_TEST_DIR = "/tmp/feynman-export-test"
 
 
 class CLIError(Exception):
@@ -149,6 +152,49 @@ def test_missing_required_arg():
     )
 
 
+def test_log_with_transcript():
+    transcript = "/tmp/feynman-test-transcript.md"
+    with open(transcript, "w", encoding="utf-8") as f:
+        f.write("# 测试对话\n\n**你**：贝叶斯定理就是条件概率公式。\n\n**听众**：条件是什么意思？\n")
+    run_cli(
+        ["log", "--concept", "测试概念", "--rounds", "5", "--passed", "true",
+         "--score", "4", "--transcript", transcript],
+        [("带转写稿记录", r"已记录：.*测试概念.*通过.*5 轮.*评分 4/5")],
+    )
+    # 转写稿应被归档
+    archived = [f for f in os.listdir(TRANSCRIPTS_DIR) if f.endswith("测试概念.md")]
+    if not archived:
+        raise CLIError("转写稿未归档到 sessions/transcripts/")
+
+
+def test_export():
+    shutil.rmtree(EXPORT_TEST_DIR, ignore_errors=True)
+    run_cli(
+        ["export", "--vault", EXPORT_TEST_DIR],
+        [("导出确认", r"已导出.*1 篇概念笔记、3 篇会话笔记、1 篇索引")],
+    )
+    # 验证 Obsidian 笔记真实生成且含 frontmatter 与转写稿
+    concept_note = os.path.join(EXPORT_TEST_DIR, "概念", "测试概念.md")
+    index_note = os.path.join(EXPORT_TEST_DIR, "费曼学习记录.md")
+    for path in (concept_note, index_note):
+        if not os.path.isfile(path):
+            raise CLIError(f"导出缺少文件：{path}")
+    with open(concept_note, encoding="utf-8") as f:
+        content = f.read()
+    for expected in ("type: feynman/concept", "mastered: true", "tags: [费曼学习法]"):
+        if expected not in content:
+            raise CLIError(f"概念笔记缺少 {expected!r}")
+    sessions_dir = os.path.join(EXPORT_TEST_DIR, "会话")
+    session_notes = os.listdir(sessions_dir) if os.path.isdir(sessions_dir) else []
+    if len(session_notes) != 3:
+        raise CLIError(f"会话笔记数量 {len(session_notes)}，期望 3")
+    with open(os.path.join(sessions_dir, sorted(session_notes)[-1]), encoding="utf-8") as f:
+        session_content = f.read()
+    if "type: feynman/session" not in session_content or "对话实录" not in session_content:
+        raise CLIError("会话笔记缺少 frontmatter 或对话实录")
+    shutil.rmtree(EXPORT_TEST_DIR, ignore_errors=True)
+
+
 TESTS = [
     test_log_success,
     test_log_history_trend,
@@ -157,15 +203,21 @@ TESTS = [
     test_report_empty,
     test_report_full,
     test_missing_required_arg,
+    test_log_with_transcript,
+    test_export,
 ]
 
 
 def main():
-    # 备份真实日志，测试从空白状态开始
+    # 备份真实日志与转写稿，测试从空白状态开始
     had_log = os.path.exists(LOG_FILE)
     if had_log:
         shutil.copy2(LOG_FILE, BACKUP)
         os.remove(LOG_FILE)
+    had_transcripts = os.path.isdir(TRANSCRIPTS_DIR)
+    if had_transcripts:
+        shutil.rmtree(TRANSCRIPTS_BACKUP, ignore_errors=True)
+        os.rename(TRANSCRIPTS_DIR, TRANSCRIPTS_BACKUP)
 
     passed, failed = 0, 0
     try:
@@ -180,11 +232,17 @@ def main():
                 if e.before:
                     print(f"     child.before: {e.before[:200]!r}")
     finally:
-        # 恢复真实日志
+        # 恢复真实日志与转写稿
         if os.path.exists(LOG_FILE):
             os.remove(LOG_FILE)
         if had_log:
             shutil.move(BACKUP, LOG_FILE)
+        shutil.rmtree(TRANSCRIPTS_DIR, ignore_errors=True)
+        if had_transcripts:
+            os.rename(TRANSCRIPTS_BACKUP, TRANSCRIPTS_DIR)
+        shutil.rmtree(EXPORT_TEST_DIR, ignore_errors=True)
+        if os.path.exists("/tmp/feynman-test-transcript.md"):
+            os.remove("/tmp/feynman-test-transcript.md")
 
     print(f"\n{passed} 通过，{failed} 失败")
     sys.exit(1 if failed else 0)
