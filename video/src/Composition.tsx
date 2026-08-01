@@ -2,9 +2,11 @@ import React from "react";
 import { AbsoluteFill, Sequence } from "remotion";
 import { SceneFade } from "./components/Chalk";
 import { LoopScene } from "./scenes/LoopScene";
+import { InstallScene } from "./scenes/InstallScene";
 import { PainScene } from "./scenes/PainScene";
 import { StepScene } from "./scenes/StepScene";
 import { TitleScene } from "./scenes/TitleScene";
+import { UsageScene } from "./scenes/UsageScene";
 import { COLORS } from "./theme";
 
 // 30s @ 30fps = 900 帧
@@ -72,8 +74,22 @@ export const FeynmanIntro: React.FC = () => {
 
       {/* 25–30s 闭环 + 结尾字幕 */}
       <Sequence from={750} durationInFrames={150}>
-        <SceneFade durationInFrames={150} fadeOut={12}>
+        <SceneFade durationInFrames={150}>
           <LoopScene />
+        </SceneFade>
+      </Sequence>
+
+      {/* 30–37s 安装 */}
+      <Sequence from={900} durationInFrames={210}>
+        <SceneFade durationInFrames={210}>
+          <InstallScene />
+        </SceneFade>
+      </Sequence>
+
+      {/* 37–45s 使用 + 落版 */}
+      <Sequence from={1110} durationInFrames={240}>
+        <SceneFade durationInFrames={240} fadeOut={14}>
+          <UsageScene />
         </SceneFade>
       </Sequence>
     </AbsoluteFill>

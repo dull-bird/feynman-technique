@@ -2,7 +2,7 @@
 
 一个住在你终端里的费曼学习法 AI 陪练 skill：你讲，它问。AI 扮演零基础但逻辑严谨的听众，连续追问、暴露知识盲区，并把每次对话记录到本地日志追踪进步。
 
-**主页与 30 秒介绍短片：<https://dull-bird.github.io/feynman-technique/>**
+**主页与 45 秒介绍短片：<https://dull-bird.github.io/feynman-technique/>**
 
 ## 使用
 
