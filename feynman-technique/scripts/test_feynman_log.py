@@ -15,8 +15,11 @@ import pexpect
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.path.join(HERE, "feynman_log.py")
+SESSION_SCRIPT = os.path.join(HERE, "feynman_session.py")
 HOOK_SCRIPT = os.path.join(HERE, "feynman_hook.py")
 LOG_FILE = os.path.join(HERE, "..", "sessions", "log.jsonl")
+STATE_FILE = os.path.join(HERE, "..", "sessions", "active_session.json")
+STATE_BACKUP = STATE_FILE + ".test-backup"
 BACKUP = LOG_FILE + ".test-backup"
 TRANSCRIPTS_DIR = os.path.join(HERE, "..", "sessions", "transcripts")
 TRANSCRIPTS_BACKUP = TRANSCRIPTS_DIR + ".test-backup"
@@ -56,15 +59,18 @@ def shutdown(child):
     child.close()
 
 
-def run_cli(args, expect_patterns, expected_exit=0):
-    """以 PTY 运行 feynman_log.py，依次匹配 expect_patterns，校验退出码。
+def run_cli(args, expect_patterns, expected_exit=0, script=None):
+    """以 PTY 运行脚本，依次匹配 expect_patterns，校验退出码。
 
     expect_patterns: 列表，每项为 (描述, 正则)。每个 expect 都附带
     EOF/TIMEOUT 哨兵，EOF 提前到来或超时都会抛出类型化异常。
+    script 默认为 feynman_log.py。
     """
+    if script is None:
+        script = SCRIPT
     child = pexpect.spawn(
         sys.executable,
-        [SCRIPT] + args,
+        [script] + args,
         encoding="utf-8",
         timeout=30,
     )
@@ -256,6 +262,51 @@ def test_hook_malformed():
         raise CLIError(f"坏输入应静默放行：exit={code} out={out[:200]!r}")
 
 
+def test_session_flow():
+    """状态机完整流程：start → 重复 start 拒绝 → 非法分类码拒绝 → round → status → close。"""
+    run_cli(["start", "--concept", "状态机概念"],
+            [("开场确认", r"会话已开场：状态机概念"),
+             ("准备清单", r"准备清单"),
+             ("历史联动", r"历史联动")],
+            script=SESSION_SCRIPT)
+    run_cli(["start", "--concept", "另一个"],
+            [("重复开场拒绝", r"已有一场进行中的会话")],
+            expected_exit=2, script=SESSION_SCRIPT)
+    run_cli(["round", "--gap", "瞎编的码"],
+            [("非法分类码拒绝", r"非法盲区分类码")],
+            expected_exit=2, script=SESSION_SCRIPT)
+    run_cli(["round", "--gap", "causal-gap", "--quote", "GC 负责清理内存",
+             "--probe", "为什么需要 GC？"],
+            [("第 1 轮打卡", r"第 1/10 轮"), ("盲区记录", r"causal-gap")],
+            script=SESSION_SCRIPT)
+    run_cli(["round", "--gap", "none", "--scaffold",
+             "--covered", "定义讲清;机制讲清"],
+            [("第 2 轮打卡", r"第 2/10 轮"), ("脚手架计数", r"脚手架 1 次"),
+             ("要点覆盖", r"定义讲清")],
+            script=SESSION_SCRIPT)
+    run_cli(["status"], [("状态锚定", r"第 2/10 轮")], script=SESSION_SCRIPT)
+    run_cli(["close", "--passed", "true", "--score", "4", "--notes", "流程测试"],
+            [("本场报告", r"== 本场报告 =="),
+             ("评分走势", r"评分 4/5"),
+             ("落账提示", r"已落账")],
+            script=SESSION_SCRIPT)
+    if os.path.exists(STATE_FILE):
+        raise CLIError("close 后状态文件未清除")
+    # 落账内容校验
+    with open(LOG_FILE, encoding="utf-8") as f:
+        last = json.loads(f.readlines()[-1])
+    if last["concept"] != "状态机概念" or last["gaps"] != ["causal-gap"] or last["rounds"] != 2:
+        raise CLIError(f"落账内容不符：{last}")
+
+
+def test_session_abort():
+    run_cli(["start", "--concept", "要放弃的概念"], [("开场", r"会话已开场")],
+            script=SESSION_SCRIPT)
+    run_cli(["abort"], [("放弃确认", r"已放弃本场会话")], script=SESSION_SCRIPT)
+    if os.path.exists(STATE_FILE):
+        raise CLIError("abort 后状态文件未清除")
+
+
 TESTS = [
     test_log_success,
     test_log_history_trend,
@@ -271,6 +322,8 @@ TESTS = [
     test_hook_trigger_english,
     test_hook_no_trigger,
     test_hook_malformed,
+    test_session_flow,
+    test_session_abort,
 ]
 
 
@@ -284,6 +337,10 @@ def main():
     if had_transcripts:
         shutil.rmtree(TRANSCRIPTS_BACKUP, ignore_errors=True)
         os.rename(TRANSCRIPTS_DIR, TRANSCRIPTS_BACKUP)
+    had_state = os.path.exists(STATE_FILE)
+    if had_state:
+        shutil.copy2(STATE_FILE, STATE_BACKUP)
+        os.remove(STATE_FILE)
 
     passed, failed = 0, 0
     try:
@@ -306,6 +363,10 @@ def main():
         shutil.rmtree(TRANSCRIPTS_DIR, ignore_errors=True)
         if had_transcripts:
             os.rename(TRANSCRIPTS_BACKUP, TRANSCRIPTS_DIR)
+        if os.path.exists(STATE_FILE):
+            os.remove(STATE_FILE)
+        if had_state:
+            shutil.move(STATE_BACKUP, STATE_FILE)
         shutil.rmtree(EXPORT_TEST_DIR, ignore_errors=True)
         if os.path.exists("/tmp/feynman-test-transcript.md"):
             os.remove("/tmp/feynman-test-transcript.md")

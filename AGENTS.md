@@ -8,6 +8,7 @@
   - `SKILL.md` — 会话流程（准备→追问→盲区→判定→记录→查进度→导出）
   - `references/method.md` — 听众规则、准备义务、评分标准
   - `scripts/feynman_log.py` — 日志与报告（`log` / `report` / `export`，仅标准库）
+  - `scripts/feynman_session.py` — 会话状态机（`start` / `round` / `status` / `close` / `abort`，仅标准库）
   - `scripts/feynman_hook.py` — UserPromptSubmit 自动触发钩子（仅标准库）
   - `scripts/install_hooks.py` — 三 agent 钩子安装器（Claude Code / Codex / Kimi）
   - `scripts/test_feynman_log.py` — pexpect 端到端测试（需 `.venv` 里的 pexpect）
