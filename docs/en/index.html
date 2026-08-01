@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feynman Technique Coach — Turn "I thought I got it" into "I know I got it"</title>
+  <meta name="description" content="A Feynman Technique AI coach that lives in your terminal: you explain, it asks. It plays a zero-background listener, keeps probing, exposes your blind spots, and logs every session to track your progress.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;900&family=Noto+Sans+SC:wght@400;500;700&family=Zhi+Mang+Xing&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to main content</a>
+
+  <header class="site-nav">
+    <a class="brand" href="#top">
+      <span class="brand-mark">?</span>
+      <span class="brand-name">Feynman Coach</span>
+    </a>
+    <nav class="nav-links" aria-label="Page navigation">
+      <a href="#method">The Loop</a>
+      <a href="#transcript">A Real Round</a>
+      <a href="#gallery">Real Sessions</a>
+      <a href="#progress">Progress</a>
+      <a href="#install">Get Started</a>
+    </nav>
+    <a class="nav-lang" href="../" lang="zh-CN" hreflang="zh-CN">中文</a>
+    <a class="nav-github" href="https://github.com/dull-bird/feynman-technique" target="_blank" rel="noopener">GitHub ↗</a>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A Feynman Technique coach that lives in your terminal</p>
+        <h1 class="hero-title">
+          Turn "I <del class="strike" data-once>thought</del> I got it"<br>
+          into "I <span class="underline-red">know</span> I got it"
+        </h1>
+        <p class="hero-sub">
+          Highlighting and re-reading create familiarity, not understanding. This skill makes AI
+          play a zero-background but logically rigorous listener: you do the explaining, it does
+          the probing — one why at a time, until you can explain the concept so clearly
+          that an outsider could repeat it back.
+        </p>
+        <div class="install-snippet">
+          <code><span class="prompt">$</span> npx skills add dull-bird/feynman-technique -g</code>
+          <button class="copy-btn" data-copy="npx skills add dull-bird/feynman-technique -g" aria-label="Copy install command">Copy</button>
+        </div>
+        <p class="hero-note">Then say one line to your agent: <em>"Use the Feynman Technique. The concept is compound interest."</em></p>
+      </div>
+
+      <!-- Signature element: a notebook being graded in red ink -->
+      <div class="notebook" role="img" aria-label="A Feynman Technique dialogue demo: the explainer gets probed repeatedly until a blind spot shows">
+        <div class="notebook-tape" aria-hidden="true"></div>
+        <p class="notebook-title">Today's concept: compound interest <span class="hand">— the one I'm most confident about</span></p>
+        <ol class="dialogue" id="hero-dialogue">
+          <li class="msg msg-user" data-step>
+            <span class="who">You</span>
+            <p>Compound interest is money making money — interest rolls into more interest.</p>
+          </li>
+          <li class="msg msg-ai" data-step>
+            <span class="who">Listener</span>
+            <p>What does "rolls" mean exactly? After year one, what actually landed in the account?</p>
+          </li>
+          <li class="msg msg-user" data-step>
+            <span class="who">You</span>
+            <p>70 dollars... wait, year two earns 7% of 1070, not of 1000.</p>
+          </li>
+          <li class="msg msg-ai" data-step>
+            <span class="who">Listener</span>
+            <p>Then why would a bank hand you money for nothing?</p>
+          </li>
+          <li class="msg msg-user msg-stuck" data-step>
+            <span class="who">You</span>
+            <p>(stuck) ...I need to go look that up.</p>
+          </li>
+        </ol>
+        <div class="red-verdict" data-step>
+          <svg class="red-circle" viewBox="0 0 220 64" aria-hidden="true">
+            <path d="M12 34 C 30 8, 190 4, 208 28 C 218 44, 150 60, 92 58 C 40 56, 2 50, 12 34"
+                  fill="none" pathLength="1"/>
+          </svg>
+          <span class="hand">Blind spot +1, added to your learning list</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Pain-point strip ============ -->
+    <aside class="strip">
+      <p>The "looks familiar" from a third read gets misreported by your brain as "mastered"<span class="strip-sep">·</span>Familiarity ≠ understanding</p>
+    </aside>
+
+    <!-- ============ The four-step loop ============ -->
+    <section class="method" id="method">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">The Method</p>
+        <h2>A four-step loop, repeated until it flows</h2>
+        <p class="section-sub">The order itself is information: each step catches the problems the previous one exposed.</p>
+      </div>
+
+      <div class="loop-grid">
+        <article class="step-card" data-reveal>
+          <span class="step-no">1</span>
+          <h3>Write down the concept</h3>
+          <p>Tackle one concept at a time. Naming it is itself a commitment: for the next thirty minutes, your attention belongs to it alone.</p>
+          <p class="step-guard hand">The concept you're most confident about deserves the first test</p>
+        </article>
+        <article class="step-card" data-reveal>
+          <span class="step-no">2</span>
+          <h3>Explain it to an outsider</h3>
+          <p>Every jargon term is cheating; every skipped step is a hole. The bar isn't the listener nodding — it's the listener being able to repeat it back.</p>
+          <p class="step-guard hand">"That's obvious" = the part you haven't figured out</p>
+        </article>
+        <article class="step-card" data-reveal>
+          <span class="step-no">3</span>
+          <h3>Spot the blind spots</h3>
+          <p>Getting stuck isn't failure — it's a roadmap. Every "I don't actually get this" points precisely at what to learn next.</p>
+          <p class="step-guard hand">Blind spots are gold mines — don't gloss over them</p>
+        </article>
+        <article class="step-card" data-reveal>
+          <span class="step-no">4</span>
+          <h3>Simplify with analogies</h3>
+          <p>Delete every word that makes you sound smart but not clear. Would your mom get it? If not, rewrite.</p>
+          <p class="step-guard hand">Jargon is a crutch; mechanism is the leg</p>
+        </article>
+      </div>
+      <p class="loop-caption"><span class="loop-glyph" aria-hidden="true">↺</span> After backfilling the blind spots, go back to step 2 and explain again — until the whole run is smooth.</p>
+    </section>
+
+    <!-- ============ Transcript ============ -->
+    <section class="transcript" id="transcript">
+      <div class="section-head">
+        <p class="eyebrow">Transcript</p>
+        <h2>What a real round of probing looks like</h2>
+        <p class="section-sub">The AI never explains for you — it only paraphrases and probes. One most-critical question at a time.</p>
+      </div>
+
+      <div class="chalkboard">
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">You</span>
+          <p>A marketing funnel is the <span class="chalk-term">conversion path</span> that turns strangers into customers.</p>
+          <span class="chalk-mark hand">← jargon unexplained</span>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">Listener</span>
+          <p>What's a "conversion path"? Where does a stranger land on their very first step?</p>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">You</span>
+          <p>They see content first, then leave their contact info, then get persuaded to buy.</p>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">Listener</span>
+          <p>Why can't you skip the first two steps and sell to them directly?</p>
+          <span class="chalk-mark hand">← five-year-old test: answering "what" isn't enough</span>
+        </div>
+        <div class="chalk-line" data-reveal>
+          <span class="chalk-who">You</span>
+          <p>Because trust takes time — nobody hands money to someone they met three seconds ago.</p>
+          <span class="chalk-mark chalk-mark-good hand">← answered the "why" ✓</span>
+        </div>
+        <p class="chalk-verdict">Five pass criteria: jargon-independent · causal chain · transparent mechanism · clear boundaries · stress test</p>
+      </div>
+    </section>
+
+    <!-- ============ Source video ============ -->
+    <section class="origin" id="origin">
+      <div class="section-head">
+        <p class="eyebrow">Origin</p>
+        <h2>Source video · where this method comes from</h2>
+        <p class="section-sub">The Feynman Technique wasn't invented by Feynman himself — it was distilled from his way of teaching. This video is where our inspiration came from.</p>
+      </div>
+      <div class="origin-grid">
+        <figure class="origin-item" data-reveal>
+          <div class="origin-frame">
+            <iframe src="https://www.youtube-nocookie.com/embed/zfbfA4C_8XU"
+                    title="The Feynman Technique — original video (YouTube)"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+          </div>
+          <figcaption class="origin-caption">Original · YouTube</figcaption>
+        </figure>
+        <figure class="origin-item" data-reveal>
+          <div class="origin-frame">
+            <iframe src="https://player.bilibili.com/player.html?bvid=BV1VhU3BrErJ&amp;autoplay=0"
+                    title="The Feynman Technique — Chinese dub (Bilibili)"
+                    loading="lazy"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    scrolling="no"
+                    allowfullscreen></iframe>
+          </div>
+          <figcaption class="origin-caption">Chinese dub · Bilibili</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ Video ============ -->
+    <section class="video-section" id="video">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">Short Film</p>
+        <h2>Three minutes: the method explained, the usage in hand</h2>
+      </div>
+      <div class="video-frame">
+        <video src="../assets/feynman-intro-en.mp4" controls muted loop playsinline preload="metadata">
+          Your browser does not support video playback.
+        </video>
+      </div>
+    </section>
+
+    <!-- ============ Real sessions gallery ============ -->
+    <section class="gallery" id="gallery">
+      <div class="section-head">
+        <p class="eyebrow">Real Records</p>
+        <h2>Five domains, six real conversations</h2>
+        <p class="section-sub">These aren't demo copy — every session was a real round of probing under the listener rules, logged locally and readable in full.</p>
+        <p class="section-sub"><em>Real session records (in Chinese)</em></p>
+      </div>
+      <div class="chips" id="gallery-chips" role="tablist" aria-label="Filter by domain"></div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </section>
+
+    <!-- ============ Progress tracking ============ -->
+    <section class="progress" id="progress">
+      <div class="section-head">
+        <p class="eyebrow">Log</p>
+        <h2>Every session is recorded — progress made visible</h2>
+        <p class="section-sub">When a session ends it's written to a local log: rounds, score, blind spots. The score trend on the same concept is your understanding curve.</p>
+      </div>
+
+      <div class="report-card" data-reveal id="progress-card">
+        <div class="report-head">
+          <h3>Learning Log</h3>
+          <span class="hand" id="progress-summary"></span>
+        </div>
+        <table class="report-table">
+          <thead>
+            <tr><th scope="col">Concept</th><th scope="col">Domain</th><th scope="col">Sessions</th><th scope="col">Score Trend</th><th scope="col">Status</th></tr>
+          </thead>
+          <tbody id="progress-tbody"></tbody>
+        </table>
+        <div class="report-foot">
+          <svg class="sparkline" id="progress-sparkline" viewBox="0 0 120 40" aria-label="Score trend"></svg>
+          <p id="progress-trend"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Export to Obsidian ============ -->
+    <section class="export" id="export">
+      <div class="section-head">
+        <p class="eyebrow">Long-term Review</p>
+        <h2>Your learning log exports into Obsidian</h2>
+        <p class="section-sub">One command exports every conversation into Obsidian-compatible notes: one per concept, one per session (full transcript included), plus a master index — frontmatter + wikilinks, queryable in Dataview.</p>
+      </div>
+      <div class="export-panel" data-reveal>
+        <div class="code-block"><code><span class="prompt">$</span> python3 feynman-technique/scripts/feynman_log.py export --vault ~/Documents/MyVault/Feynman</code></div>
+        <ul class="export-list">
+          <li><strong>Concept notes</strong>Mastery status, score trend, links to past sessions</li>
+          <li><strong>Session notes</strong>Date, rounds, blind spots, full transcript</li>
+          <li><strong>Master index</strong>Grouped by mastery status — see what's still outstanding at a glance</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ Install ============ -->
+    <section class="install" id="install">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">Start</p>
+        <h2>Two steps to put a listener in your terminal</h2>
+      </div>
+      <ol class="install-steps">
+        <li data-reveal>
+          <span class="install-no">01</span>
+          <div>
+            <h3>Install with the skills CLI</h3>
+            <div class="code-block"><code><span class="prompt">$</span> npx skills add dull-bird/feynman-technique -g</code></div>
+            <p class="install-hint">You can also <code>git clone</code> and copy the <code>feynman-technique/</code> subdirectory into <code>~/.agents/skills/</code>.</p>
+          </div>
+        </li>
+        <li data-reveal>
+          <span class="install-no">02</span>
+          <div>
+            <h3>Name a concept you "think you know"</h3>
+            <p class="install-quote">"Use the Feynman Technique. The concept is <em>index funds</em>."</p>
+            <p class="install-hint">Pick the one you're most confident about — the biggest blind spots usually hide there.</p>
+          </div>
+        </li>
+      </ol>
+      <a class="cta" href="https://github.com/dull-bird/feynman-technique" target="_blank" rel="noopener">Check it out on GitHub ↗</a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Feynman Technique Coach · You explain, it asks — until you truly get it</p>
+    <p class="footer-fine">Method distilled from Richard Feynman's learning practice · Page and short film generated by AI</p>
+  </footer>
+
+  <script src="../gallery-data.js"></script>
+  <script src="../main.js"></script>
+</body>
+</html>

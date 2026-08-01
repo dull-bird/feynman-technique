@@ -136,6 +136,27 @@ a { color: inherit; }
 .nav-github:hover,
 .nav-github:focus-visible { background: var(--ink); color: var(--paper); }
 
+.nav-lang {
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+  border: 1.5px dashed color-mix(in srgb, var(--ink) 45%, transparent);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav-lang:hover,
+.nav-lang:focus-visible { color: var(--ink); border-color: var(--red); }
+
+/* ---------- 英文版字体回退 ---------- */
+html[lang="en"] {
+  --font-display: "Noto Serif SC", Georgia, "Times New Roman", serif;
+  --font-body: "Noto Sans SC", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-hand: "Zhi Mang Xing", "Segoe Print", "Bradley Hand", cursive;
+}
+
 /* ---------- Hero ---------- */
 .hero {
   display: grid;
@@ -505,6 +526,42 @@ section { padding: 5.5rem 5vw; }
 }
 
 .video-frame video { display: block; width: 100%; aspect-ratio: 16 / 9; background: var(--ink-deep); }
+
+/* ---------- 源头视频 ---------- */
+.origin {
+  background: color-mix(in srgb, var(--paper) 92%, var(--sage));
+}
+
+.origin-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.origin-item { min-width: 0; }
+
+.origin-frame {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.origin-frame iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: var(--ink-deep);
+}
+
+.origin-caption {
+  margin-top: 0.7rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
 
 /* ---------- 进步追踪 ---------- */
 .report-card {
@@ -928,4 +985,5 @@ section { padding: 5.5rem 5vw; }
 @media (max-width: 720px) {
   .export-list { grid-template-columns: 1fr; }
   .gallery-grid { grid-template-columns: 1fr; }
+  .origin-grid { grid-template-columns: 1fr; }
 }

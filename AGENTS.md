@@ -14,7 +14,7 @@
   - `scripts/test_feynman_log.py` — pexpect 端到端测试（需 `.venv` 里的 pexpect）
   - `scripts/build_gallery.py` — 从 `sessions/` 生成 `docs/gallery-data.js`
 - `sessions/` — 本地学习记录（**不入库**，gitignored）
-- `docs/` — GitHub Pages 网站（`index.html` / `styles.css` / `main.js` / `gallery-data.js` / `assets/`）
+- `docs/` — GitHub Pages 网站（`index.html` 中文版 / `en/index.html` 英文版 / `styles.css` / `main.js`（按 `html lang` 切换 UI 文案）/ `gallery-data.js` / `assets/`）
 - `video/` — Remotion 视频源码（产物渲染到 `docs/assets/feynman-intro.mp4`）
 
 ## 铁律：每次修改都要检查三处联动

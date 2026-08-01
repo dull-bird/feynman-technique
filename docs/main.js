@@ -5,6 +5,7 @@
   "use strict";
 
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var isEn = (document.documentElement.lang || "").indexOf("en") === 0;
 
   // ---- 滚动 reveal（通用）----
   var revealEls = document.querySelectorAll("[data-reveal]");
@@ -64,7 +65,7 @@
       var text = btn.getAttribute("data-copy") || "";
       var done = function () {
         var original = btn.textContent;
-        btn.textContent = "已复制 ✓";
+        btn.textContent = isEn ? "Copied ✓" : "已复制 ✓";
         setTimeout(function () { btn.textContent = original; }, 1600);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -96,6 +97,32 @@
   var data = window.FEYNMAN_GALLERY;
   if (!data || !data.length) return;
 
+  // 英文页面复用本脚本：仅切换 UI 文案，gallery 数据本身保持中文
+  var isEn = (document.documentElement.lang || "").indexOf("en") === 0;
+  var STR = isEn ? {
+    all: "All",
+    rounds: " rounds",
+    passed: "Passed",
+    failed: "Not passed",
+    gapsLabel: "Blind spots: ",
+    fullDialogue: function (n) { return "Read full dialogue (" + n + " messages)"; },
+    mastered: "Mastered",
+    revisit: "To revisit",
+    summary: function (total, passed) { return total + " sessions · " + passed + " passed"; },
+    trend: "Score trend "
+  } : {
+    all: "全部",
+    rounds: " 轮",
+    passed: "通过",
+    failed: "未通过",
+    gapsLabel: "盲区：",
+    fullDialogue: function (n) { return "读完整对话（" + n + " 条）"; },
+    mastered: "已掌握",
+    revisit: "待回填",
+    summary: function (total, passed) { return total + " 次对话 · " + passed + " 次通过"; },
+    trend: "评分走势 "
+  };
+
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -108,7 +135,7 @@
   var grid = document.getElementById("gallery-grid");
   if (!chipsBox || !grid) return;
 
-  var domains = ["全部"];
+  var domains = [STR.all];
   data.forEach(function (s) {
     if (domains.indexOf(s.domain) === -1) domains.push(s.domain);
   });
@@ -136,7 +163,7 @@
   function renderCards(domain) {
     grid.innerHTML = "";
     data.forEach(function (s) {
-      if (domain !== "全部" && s.domain !== domain) return;
+      if (domain !== STR.all && s.domain !== domain) return;
 
       var card = el("article", "g-card");
 
@@ -148,21 +175,21 @@
       card.appendChild(el("h3", null, s.concept));
 
       var meta = el("p", "g-meta");
-      meta.appendChild(document.createTextNode(s.date + " · " + s.rounds + " 轮 · "));
+      meta.appendChild(document.createTextNode(s.date + " · " + s.rounds + STR.rounds + " · "));
       meta.appendChild(el("span", s.passed ? "g-status-pass" : "g-status-fail",
-        s.passed ? "通过" : "未通过"));
+        s.passed ? STR.passed : STR.failed));
       card.appendChild(meta);
 
       if (s.gaps && s.gaps.length) {
         var gaps = el("p", "g-gaps");
-        gaps.appendChild(el("strong", null, "盲区："));
+        gaps.appendChild(el("strong", null, STR.gapsLabel));
         gaps.appendChild(document.createTextNode(s.gaps.slice(0, 2).join("；")));
         card.appendChild(gaps);
       }
 
       if (s.messages && s.messages.length) {
         var details = el("details");
-        details.appendChild(el("summary", null, "读完整对话（" + s.messages.length + " 条）"));
+        details.appendChild(el("summary", null, STR.fullDialogue(s.messages.length)));
         var dlg = el("div", "g-dialogue");
         s.messages.forEach(function (m) {
           var bubble = el("div", "g-msg " + (m.who === "你" ? "you" : "listener"));
@@ -178,7 +205,7 @@
     });
   }
 
-  renderCards("全部");
+  renderCards(STR.all);
 
   // ---- 进步追踪（真实数据） ----
   var tbody = document.getElementById("progress-tbody");
@@ -205,7 +232,7 @@
     tr.appendChild(el("td", null, scores.join(" → ")));
     var status = el("td");
     status.appendChild(el("span", last.passed ? "g-status-pass" : "g-status-fail",
-      last.passed ? "已掌握" : "待回填"));
+      last.passed ? STR.mastered : STR.revisit));
     tr.appendChild(status);
     tbody.appendChild(tr);
   });
@@ -213,7 +240,7 @@
   var total = data.length;
   var passed = data.filter(function (s) { return s.passed; }).length;
   var summary = document.getElementById("progress-summary");
-  if (summary) summary.textContent = total + " 次对话 · " + passed + " 次通过";
+  if (summary) summary.textContent = STR.summary(total, passed);
 
   // 评分走势 sparkline（按时间顺序的全部评分）
   var spark = document.getElementById("progress-sparkline");
@@ -238,5 +265,5 @@
     dot.setAttribute("r", "3");
     spark.appendChild(dot);
   }
-  if (trend) trend.textContent = "评分走势 " + all.join(" → ");
+  if (trend) trend.textContent = STR.trend + all.join(" → ");
 })();
