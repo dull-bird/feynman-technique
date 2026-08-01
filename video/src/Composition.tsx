@@ -1,100 +1,67 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import { SceneFade } from "./components/Chalk";
-import { LoopScene } from "./scenes/LoopScene";
-import { InstallScene } from "./scenes/InstallScene";
-import { PainScene } from "./scenes/PainScene";
 import { StepScene } from "./scenes/StepScene";
-import { TitleScene } from "./scenes/TitleScene";
-import { UsageScene } from "./scenes/UsageScene";
+import { EndingScene } from "./scenes/v2/EndingScene";
+import { FeynmanScene } from "./scenes/v2/FeynmanScene";
+import { HookScene } from "./scenes/v2/HookScene";
+import { MistakesScene } from "./scenes/v2/MistakesScene";
+import { OverviewScene } from "./scenes/v2/OverviewScene";
+import { PracticeScene } from "./scenes/v2/PracticeScene";
+import { SkillScene } from "./scenes/v2/SkillScene";
+import { Step1Scene } from "./scenes/v2/Step1Scene";
+import { Step2Scene } from "./scenes/v2/Step2Scene";
+import { TransferScene } from "./scenes/v2/TransferScene";
+import { WhyScene } from "./scenes/v2/WhyScene";
 import { COLORS } from "./theme";
+import timeline from "./timeline.json";
 
-// 30s @ 30fps = 900 帧
+// 旁白驱动的场景注册表：窗口由 narration/build_v2.mjs 按实测音长反推
+const SCENES: Record<string, React.FC> = {
+  hook: HookScene,
+  feynman: FeynmanScene,
+  overview: OverviewScene,
+  step1: Step1Scene,
+  step2: Step2Scene,
+  step3: () => (
+    <StepScene
+      num="03"
+      title="识别盲区"
+      sub="卡壳不是失败，是路线图"
+      circleLast={2}
+    />
+  ),
+  step4: () => (
+    <StepScene num="04" title="删掉术语" sub="你妈能听懂吗？听不懂，就重写" />
+  ),
+  why: WhyScene,
+  transfer: TransferScene,
+  mistakes: MistakesScene,
+  practice: PracticeScene,
+  skill: SkillScene,
+  ending: EndingScene,
+};
+
 export const FeynmanIntro: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.board }}>
       {/* 中文配音（阿里云 NLS TTS，stanley） */}
       <Audio src={staticFile("narration.mp3")} />
 
-      {/* 0–4s 片头 */}
-      <Sequence durationInFrames={120}>
-        <SceneFade durationInFrames={120}>
-          <TitleScene />
-        </SceneFade>
-      </Sequence>
-
-      {/* 4–8s 痛点 */}
-      <Sequence from={120} durationInFrames={120}>
-        <SceneFade durationInFrames={120}>
-          <PainScene />
-        </SceneFade>
-      </Sequence>
-
-      {/* 8–13s 第一步 */}
-      <Sequence from={240} durationInFrames={150}>
-        <SceneFade durationInFrames={150}>
-          <StepScene
-            num="01"
-            title="写下概念"
-            sub="把学到的东西，用自己的话写在一页纸上"
-          />
-        </SceneFade>
-      </Sequence>
-
-      {/* 13–17s 第二步 */}
-      <Sequence from={390} durationInFrames={120}>
-        <SceneFade durationInFrames={120}>
-          <StepScene
-            num="02"
-            title="讲给外行"
-            sub="假装讲给一个完全不懂的人听"
-          />
-        </SceneFade>
-      </Sequence>
-
-      {/* 17–21s 第三步（红笔圈出盲区） */}
-      <Sequence from={510} durationInFrames={120}>
-        <SceneFade durationInFrames={120}>
-          <StepScene
-            num="03"
-            title="识别盲区"
-            sub="讲不清的地方，就是你的盲区"
-            circleLast={2}
-          />
-        </SceneFade>
-      </Sequence>
-
-      {/* 21–25s 第四步 */}
-      <Sequence from={630} durationInFrames={120}>
-        <SceneFade durationInFrames={120}>
-          <StepScene
-            num="04"
-            title="简化类比"
-            sub="用一个生活类比，把它讲到最简单"
-          />
-        </SceneFade>
-      </Sequence>
-
-      {/* 25–30s 闭环 + 结尾字幕 */}
-      <Sequence from={750} durationInFrames={150}>
-        <SceneFade durationInFrames={150}>
-          <LoopScene />
-        </SceneFade>
-      </Sequence>
-
-      {/* 30–37s 安装 */}
-      <Sequence from={900} durationInFrames={210}>
-        <SceneFade durationInFrames={210}>
-          <InstallScene />
-        </SceneFade>
-      </Sequence>
-
-      {/* 37–45s 使用 + 落版 */}
-      <Sequence from={1110} durationInFrames={240}>
-        <SceneFade durationInFrames={240} fadeOut={14}>
-          <UsageScene />
-        </SceneFade>
-      </Sequence>
+      {timeline.scenes.map((s) => {
+        const Scene = SCENES[s.id];
+        return (
+          <Sequence
+            key={s.id}
+            from={s.startFrame}
+            durationInFrames={s.durationFrames}
+          >
+            <SceneFade durationInFrames={s.durationFrames}>
+              <Scene />
+            </SceneFade>
+          </Sequence>
+        );
+      })}
     </AbsoluteFill>
   );
 };

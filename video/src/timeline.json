@@ -1,0 +1,98 @@
+{
+  "fps": 30,
+  "totalFrames": 5344,
+  "totalDurationSec": 178.13333333333333,
+  "scenes": [
+    {
+      "id": "hook",
+      "startFrame": 0,
+      "durationFrames": 388,
+      "audioStartSec": 0.3,
+      "audioDurSec": 11.832
+    },
+    {
+      "id": "feynman",
+      "startFrame": 388,
+      "durationFrames": 456,
+      "audioStartSec": 13.233333333333334,
+      "audioDurSec": 14.088
+    },
+    {
+      "id": "overview",
+      "startFrame": 844,
+      "durationFrames": 161,
+      "audioStartSec": 28.433333333333334,
+      "audioDurSec": 4.248
+    },
+    {
+      "id": "step1",
+      "startFrame": 1005,
+      "durationFrames": 620,
+      "audioStartSec": 33.8,
+      "audioDurSec": 19.56
+    },
+    {
+      "id": "step2",
+      "startFrame": 1625,
+      "durationFrames": 517,
+      "audioStartSec": 54.46666666666666,
+      "audioDurSec": 16.128
+    },
+    {
+      "id": "step3",
+      "startFrame": 2142,
+      "durationFrames": 453,
+      "audioStartSec": 71.7,
+      "audioDurSec": 13.968
+    },
+    {
+      "id": "step4",
+      "startFrame": 2595,
+      "durationFrames": 463,
+      "audioStartSec": 86.8,
+      "audioDurSec": 14.304
+    },
+    {
+      "id": "why",
+      "startFrame": 3058,
+      "durationFrames": 452,
+      "audioStartSec": 102.23333333333333,
+      "audioDurSec": 13.944
+    },
+    {
+      "id": "transfer",
+      "startFrame": 3510,
+      "durationFrames": 491,
+      "audioStartSec": 117.3,
+      "audioDurSec": 15.24
+    },
+    {
+      "id": "mistakes",
+      "startFrame": 4001,
+      "durationFrames": 262,
+      "audioStartSec": 133.66666666666669,
+      "audioDurSec": 7.632
+    },
+    {
+      "id": "practice",
+      "startFrame": 4263,
+      "durationFrames": 311,
+      "audioStartSec": 142.4,
+      "audioDurSec": 9.24
+    },
+    {
+      "id": "skill",
+      "startFrame": 4574,
+      "durationFrames": 433,
+      "audioStartSec": 152.76666666666668,
+      "audioDurSec": 13.32
+    },
+    {
+      "id": "ending",
+      "startFrame": 5007,
+      "durationFrames": 337,
+      "audioStartSec": 167.20000000000002,
+      "audioDurSec": 10.128
+    }
+  ]
+}
