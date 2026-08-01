@@ -1,44 +1,34 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import { SceneFade } from "./components/Chalk";
-import { StepScene } from "./scenes/StepScene";
-import { EndingScene } from "./scenes/v2/EndingScene";
-import { FeynmanScene } from "./scenes/v2/FeynmanScene";
-import { HookScene } from "./scenes/v2/HookScene";
-import { MistakesScene } from "./scenes/v2/MistakesScene";
-import { OverviewScene } from "./scenes/v2/OverviewScene";
-import { PracticeScene } from "./scenes/v2/PracticeScene";
-import { SkillScene } from "./scenes/v2/SkillScene";
-import { Step1Scene } from "./scenes/v2/Step1Scene";
-import { Step2Scene } from "./scenes/v2/Step2Scene";
-import { TransferScene } from "./scenes/v2/TransferScene";
-import { WhyScene } from "./scenes/v2/WhyScene";
+import { CoreScene } from "./scenes/v3/CoreScene";
+import { DemoScene } from "./scenes/v3/DemoScene";
+import { EndingScene } from "./scenes/v3/EndingScene";
+import { ExportScene } from "./scenes/v3/ExportScene";
+import { GalleryScene } from "./scenes/v3/GalleryScene";
+import { HookScene } from "./scenes/v3/HookScene";
+import { InstallScene } from "./scenes/v3/InstallScene";
+import { IntroScene } from "./scenes/v3/IntroScene";
+import { MemoryScene } from "./scenes/v3/MemoryScene";
+import { RecordScene } from "./scenes/v3/RecordScene";
+import { Workflow1Scene } from "./scenes/v3/Workflow1Scene";
+import { Workflow2Scene } from "./scenes/v3/Workflow2Scene";
 import { COLORS } from "./theme";
 import timeline from "./timeline.json";
 
-// 旁白驱动的场景注册表：窗口由 narration/build_v2.mjs 按实测音长反推
+// 旁白驱动的场景注册表：窗口由 narration/build_v3.mjs 按实测音长反推
 const SCENES: Record<string, React.FC> = {
   hook: HookScene,
-  feynman: FeynmanScene,
-  overview: OverviewScene,
-  step1: Step1Scene,
-  step2: Step2Scene,
-  step3: () => (
-    <StepScene
-      num="03"
-      title="识别盲区"
-      sub="卡壳不是失败，是路线图"
-      circleLast={2}
-    />
-  ),
-  step4: () => (
-    <StepScene num="04" title="删掉术语" sub="你妈能听懂吗？听不懂，就重写" />
-  ),
-  why: WhyScene,
-  transfer: TransferScene,
-  mistakes: MistakesScene,
-  practice: PracticeScene,
-  skill: SkillScene,
+  intro: IntroScene,
+  core: CoreScene,
+  demo: DemoScene,
+  install: InstallScene,
+  workflow1: Workflow1Scene,
+  workflow2: Workflow2Scene,
+  record: RecordScene,
+  memory: MemoryScene,
+  export: ExportScene,
+  gallery: GalleryScene,
   ending: EndingScene,
 };
 

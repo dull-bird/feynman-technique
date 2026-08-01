@@ -15,6 +15,7 @@ import pexpect
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.path.join(HERE, "feynman_log.py")
+HOOK_SCRIPT = os.path.join(HERE, "feynman_hook.py")
 LOG_FILE = os.path.join(HERE, "..", "sessions", "log.jsonl")
 BACKUP = LOG_FILE + ".test-backup"
 TRANSCRIPTS_DIR = os.path.join(HERE, "..", "sessions", "transcripts")
@@ -214,6 +215,47 @@ def test_report_json():
         raise CLIError("JSON mastered 字段不符")
 
 
+def run_hook(stdin_text):
+    """通过 PTY 以管道喂给 feynman_hook.py，返回 (stdout, exitstatus)。"""
+    child = pexpect.spawn(
+        "/bin/bash",
+        ["-c", f"printf '%s' {json.dumps(stdin_text)} | {sys.executable} {HOOK_SCRIPT}"],
+        encoding="utf-8",
+        timeout=30,
+    )
+    try:
+        child.expect([pexpect.EOF, pexpect.TIMEOUT])
+        output = child.before
+        child.close()
+        return output, child.exitstatus
+    finally:
+        shutdown(child)
+
+
+def test_hook_trigger():
+    out, code = run_hook('{"prompt":"用费曼学习法，概念是复利"}')
+    if code != 0 or "SKILL.md" not in out or "会话流程" not in out:
+        raise CLIError(f"钩子命中时未注入指针：exit={code} out={out[:200]!r}")
+
+
+def test_hook_trigger_english():
+    out, code = run_hook('{"prompt":"feynman technique on entropy"}')
+    if code != 0 or "SKILL.md" not in out:
+        raise CLIError(f"英文触发词未命中：exit={code} out={out[:200]!r}")
+
+
+def test_hook_no_trigger():
+    out, code = run_hook('{"prompt":"今天天气怎么样"}')
+    if code != 0 or out.strip():
+        raise CLIError(f"未命中时应静默：exit={code} out={out[:200]!r}")
+
+
+def test_hook_malformed():
+    out, code = run_hook("not json at all")
+    if code != 0 or out.strip():
+        raise CLIError(f"坏输入应静默放行：exit={code} out={out[:200]!r}")
+
+
 TESTS = [
     test_log_success,
     test_log_history_trend,
@@ -225,6 +267,10 @@ TESTS = [
     test_missing_required_arg,
     test_log_with_transcript,
     test_export,
+    test_hook_trigger,
+    test_hook_trigger_english,
+    test_hook_no_trigger,
+    test_hook_malformed,
 ]
 
 

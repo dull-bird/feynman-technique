@@ -19,6 +19,18 @@ cp -r feynman-technique/feynman-technique ~/.agents/skills/feynman-technique
 
 然后对你的 agent 说：「用费曼学习法，概念是 XX」。
 
+### 自动触发（可选）
+
+装一个 UserPromptSubmit 钩子，说「费曼」「是否真懂」等词时自动唤起 skill（支持 Claude Code / Codex / Kimi Code）：
+
+```bash
+python3 ~/.agents/skills/feynman-technique/scripts/install_hooks.py            # 全部安装
+python3 ~/.agents/skills/feynman-technique/scripts/install_hooks.py --agent kimi
+python3 ~/.agents/skills/feynman-technique/scripts/install_hooks.py --uninstall
+```
+
+钩子只注入一条指向 SKILL.md 的紧凑指针（方法细节以文件为准），幂等、可卸载、不影响其他钩子。
+
 ## 结构
 
 - `feynman-technique/` — skill 本体（npx skills 只安装这个目录）

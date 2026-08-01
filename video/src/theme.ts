@@ -18,4 +18,7 @@ const hand = loadZhiMangXing("normal", {
 });
 
 export const SERIF = `${serif.fontFamily}, "Songti SC", "STSong", serif`;
+// 手写体只用于 ≤12 字的短批注（红笔圈注、一句话标签）
 export const HAND = `${hand.fontFamily}, "Kaiti SC", "STKaiti", cursive`;
+// 较长的手写风句子用楷体，清晰易读
+export const KAITI = `"Kaiti SC", "STKaiti", "KaiTi", ${serif.fontFamily}, serif`;
