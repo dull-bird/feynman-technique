@@ -23,6 +23,7 @@
       <a href="#transcript">对话实录</a>
       <a href="#gallery">真实对话</a>
       <a href="#progress">进步追踪</a>
+      <a href="#tech">技术架构</a>
       <a href="#install">开始使用</a>
     </nav>
     <a class="nav-lang" href="en/" lang="en" hreflang="en">EN</a>
@@ -261,6 +262,54 @@
           <li><strong>会话笔记</strong>日期、轮数、盲区、完整对话实录</li>
           <li><strong>总索引</strong>按掌握状态分组，一眼看到哪些还欠着</li>
         </ul>
+      </div>
+    </section>
+
+    <!-- ============ 技术架构 ============ -->
+    <section class="tech" id="tech">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">架构</p>
+        <h2>技术上有什么不一样</h2>
+        <p class="section-sub">大多数「费曼 prompt」只是一段提示词。这个项目把方法做成了系统：AI 负责对话质量，程序负责流程纪律。</p>
+      </div>
+
+      <div class="pipeline" data-reveal>
+        <span class="pipe-node">你讲</span>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <span class="pipe-node">AI 听众<small>带评分表上岗</small></span>
+        <span class="pipe-arrow" aria-hidden="true">⇄</span>
+        <span class="pipe-node">会话状态机<small>流程纪律</small></span>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <span class="pipe-node">JSONL 日志</span>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <span class="pipe-node">报告 · Obsidian · Gallery</span>
+      </div>
+
+      <div class="tech-grid">
+        <article class="tech-card" data-reveal>
+          <h3>状态机驱动</h3>
+          <p>流程不靠 prompt 自觉。<code>start / round / status / close</code> 四个命令把轮数上限、盲区分类合法性、落账固化为硬约束——对话再长也不漂移。</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>考官先持评分表</h3>
+          <p>每场开场前先搜索查证概念、做第一性拆解、写下 5–8 条验收要点，再读取你的历史记录。每一次追问都有靶子，不是随机提问。</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>7 类盲区分类法</h3>
+          <p>事实错误 &gt; 术语循环 &gt; 因果缺口 &gt; 机制黑盒 &gt; 边界模糊 &gt; 类比失灵 &gt; 边界盲。事实错误永远最先打——它毒化下游一切。</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>脚手架防伪</h3>
+          <p>提示上限 60–100 字加一个例子；提示后的复述只算进步不算掌握——必须换个角度重新讲。防的就是鹦鹉学舌。</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>数据闭环</h3>
+          <p>每场对话进 JSONL 日志。统计报告、Obsidian 导出、网站 gallery，全部从同一份数据自动构建——一处记录，处处投影。</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>工程保障</h3>
+          <p>16 项 pexpect 端到端测试随每次提交自动运行；UserPromptSubmit 钩子让 Claude Code、Codex、Kimi 听到「费曼」就自动唤起。</p>
+        </article>
       </div>
     </section>
 

@@ -23,6 +23,7 @@
       <a href="#transcript">A Real Round</a>
       <a href="#gallery">Real Sessions</a>
       <a href="#progress">Progress</a>
+      <a href="#tech">Architecture</a>
       <a href="#install">Get Started</a>
     </nav>
     <a class="nav-lang" href="../" lang="zh-CN" hreflang="zh-CN">中文</a>
@@ -262,6 +263,54 @@
           <li><strong>Session notes</strong>Date, rounds, blind spots, full transcript</li>
           <li><strong>Master index</strong>Grouped by mastery status — see what's still outstanding at a glance</li>
         </ul>
+      </div>
+    </section>
+
+    <!-- ============ Architecture ============ -->
+    <section class="tech" id="tech">
+      <div class="section-head">
+        <p class="eyebrow eyebrow-chalk">Architecture</p>
+        <h2>What's different under the hood</h2>
+        <p class="section-sub">Most "Feynman prompts" are just a prompt. This project turns the method into a system: the AI owns conversation quality, the code owns process discipline.</p>
+      </div>
+
+      <div class="pipeline" data-reveal>
+        <span class="pipe-node">You explain</span>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <span class="pipe-node">AI listener<small>rubric in hand</small></span>
+        <span class="pipe-arrow" aria-hidden="true">⇄</span>
+        <span class="pipe-node">Session state machine<small>discipline</small></span>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <span class="pipe-node">JSONL log</span>
+        <span class="pipe-arrow" aria-hidden="true">→</span>
+        <span class="pipe-node">Reports · Obsidian · Gallery</span>
+      </div>
+
+      <div class="tech-grid">
+        <article class="tech-card" data-reveal>
+          <h3>State-machine driven</h3>
+          <p>The process doesn't rely on prompt goodwill. Four commands — <code>start / round / status / close</code> — hard-code round caps, valid gap codes, and logging. Long conversations can't drift.</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>The examiner holds a rubric first</h3>
+          <p>Before every session it researches the concept, decomposes it from first principles, writes 5–8 mastery checkpoints, and reads your history. Every probe has a target.</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>7-category gap taxonomy</h3>
+          <p>Factual error &gt; jargon dodge &gt; causal gap &gt; mechanism black box &gt; boundary blur &gt; broken analogy &gt; edge-case blind. Factual errors always die first — they poison everything downstream.</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>Anti-parroting scaffold</h3>
+          <p>Hints are capped at 60–100 words plus one example, and a scaffolded re-explanation counts as progress, not mastery — you must re-explain from a fresh angle.</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>Data loop</h3>
+          <p>Every session lands in a JSONL log. Reports, the Obsidian export, and this site's gallery are all rebuilt from the same data — record once, project everywhere.</p>
+        </article>
+        <article class="tech-card" data-reveal>
+          <h3>Engineering backbone</h3>
+          <p>16 pexpect end-to-end tests run on every commit, and a UserPromptSubmit hook auto-invokes the skill in Claude Code, Codex, and Kimi when you say "feynman".</p>
+        </article>
       </div>
     </section>
 
