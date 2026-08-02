@@ -216,7 +216,7 @@
       <div class="section-head">
         <p class="eyebrow">真实记录</p>
         <h2>五个领域，六场真实对话</h2>
-        <p class="section-sub">这些不是演示文案——每一场都是按听众规则真实进行的追问，落账在本地日志里，点开就能读全程。</p>
+        <p class="section-sub">每场对话由 AI 按听众规则生成并真实落账——点开就能读全程。双 agent 独立实测版正在路上。</p>
       </div>
       <div class="chips" id="gallery-chips" role="tablist" aria-label="按领域筛选"></div>
       <div class="gallery-grid" id="gallery-grid"></div>
@@ -309,27 +309,27 @@
       <div class="tech-grid">
         <article class="tech-card" data-reveal>
           <h3>状态机驱动</h3>
-          <p>流程不靠 prompt 自觉。<code>start / round / status / close</code> 四个命令把轮数上限、盲区分类合法性、落账固化为硬约束——对话再长也不漂移。</p>
+          <p>轮数上限、盲区分类合法性、落账由代码强制，有测试盯着。长对话漂移时，<code>status</code> 一句话重新锚定。</p>
         </article>
         <article class="tech-card" data-reveal>
           <h3>考官先持评分表</h3>
-          <p>每场开场前先搜索查证概念、做第一性拆解、写下 5–8 条验收要点，再读取你的历史记录。每一次追问都有靶子，不是随机提问。</p>
+          <p>没有准备文件，状态机拒绝开场——搜索查证、第一性拆解、写下 5–8 条验收要点，是硬门槛不是建议。开场自动联动你的历史记录。</p>
         </article>
         <article class="tech-card" data-reveal>
           <h3>7 类盲区分类法</h3>
-          <p>事实错误 &gt; 术语循环 &gt; 因果缺口 &gt; 机制黑盒 &gt; 边界模糊 &gt; 类比失灵 &gt; 边界盲。事实错误永远最先打——它毒化下游一切。</p>
+          <p>分类码由状态机校验，只接受 7 个合法值。优先级排序（事实错误先打）与归类判断，由听众按规则执行。</p>
         </article>
         <article class="tech-card" data-reveal>
           <h3>脚手架防伪</h3>
-          <p>提示上限 60–100 字加一个例子；提示后的复述只算进步不算掌握——必须换个角度重新讲。防的就是鹦鹉学舌。</p>
+          <p>提示文本超过 120 字符会被状态机拒绝——上限由代码把守。提示后的复述不算掌握、须换角度重讲，由听众规则约束。</p>
         </article>
         <article class="tech-card" data-reveal>
           <h3>数据闭环</h3>
-          <p>每场对话进 JSONL 日志。统计报告、Obsidian 导出、网站 gallery，全部从同一份数据自动构建。</p>
+          <p><code>close</code> 一落账就进 JSONL 日志。统计报告、Obsidian 导出、网站 gallery，全部从同一份数据自动构建。</p>
         </article>
         <article class="tech-card" data-reveal>
           <h3>工程保障</h3>
-          <p>18 项 pexpect 端到端测试随每次提交自动运行；UserPromptSubmit 钩子让 Claude Code、Codex、Kimi 听到「费曼」就自动唤起。</p>
+          <p>本仓库 pre-commit 钩子每次提交自动运行 19 项 pexpect 测试（clone 后需一行命令启用）。UserPromptSubmit 钩子在本机三个 agent 实测通过，命中关键词即注入 skill 指针。</p>
         </article>
       </div>
     </section>

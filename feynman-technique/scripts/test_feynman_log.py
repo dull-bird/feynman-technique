@@ -268,14 +268,53 @@ def test_hook_malformed():
         raise CLIError(f"坏输入应静默放行：exit={code} out={out[:200]!r}")
 
 
+PREP_FILE = "/tmp/feynman-test-prep.md"
+
+
+def write_prep():
+    with open(PREP_FILE, "w", encoding="utf-8") as f:
+        f.write("# 状态机概念 准备\n"
+                "- 要点1：能不用术语定义概念\n"
+                "- 要点2：能讲清核心机制\n"
+                "- 要点3：能给出具体例子\n"
+                "- 预判盲区：术语循环、因果缺口\n")
+
+
+def test_session_gates():
+    """硬门槛：无 prep 拒绝开场；prep 不存在拒绝；内容过少拒绝；scaffold 缺 hint 拒绝；hint 超长拒绝。"""
+    run_cli(["start", "--concept", "裸奔概念"],
+            [("无 prep 拒绝", r"缺少准备文件")],
+            expected_exit=2, script=SESSION_SCRIPT)
+    run_cli(["start", "--concept", "裸奔概念", "--prep", "/tmp/不存在的文件.md"],
+            [("prep 不存在拒绝", r"准备文件不存在")],
+            expected_exit=2, script=SESSION_SCRIPT)
+    with open(PREP_FILE, "w", encoding="utf-8") as f:
+        f.write("太少了\n")
+    run_cli(["start", "--concept", "裸奔概念", "--prep", PREP_FILE],
+            [("prep 过少拒绝", r"内容过少")],
+            expected_exit=2, script=SESSION_SCRIPT)
+    write_prep()
+    run_cli(["start", "--concept", "门槛概念", "--prep", PREP_FILE],
+            [("有 prep 放行", r"会话已开场：门槛概念")],
+            script=SESSION_SCRIPT)
+    run_cli(["round", "--gap", "none", "--scaffold"],
+            [("scaffold 缺 hint 拒绝", r"需要 --hint")],
+            expected_exit=2, script=SESSION_SCRIPT)
+    run_cli(["round", "--gap", "none", "--scaffold", "--hint", "长" * 130],
+            [("hint 超长拒绝", r"提示超长")],
+            expected_exit=2, script=SESSION_SCRIPT)
+    run_cli(["abort"], [("清理", r"已放弃")], script=SESSION_SCRIPT)
+
+
 def test_session_flow():
     """状态机完整流程：start → 重复 start 拒绝 → 非法分类码拒绝 → round → status → close。"""
-    run_cli(["start", "--concept", "状态机概念"],
+    write_prep()
+    run_cli(["start", "--concept", "状态机概念", "--prep", PREP_FILE],
             [("开场确认", r"会话已开场：状态机概念"),
              ("准备清单", r"准备清单"),
              ("历史联动", r"历史联动")],
             script=SESSION_SCRIPT)
-    run_cli(["start", "--concept", "另一个"],
+    run_cli(["start", "--concept", "另一个", "--prep", PREP_FILE],
             [("重复开场拒绝", r"已有一场进行中的会话")],
             expected_exit=2, script=SESSION_SCRIPT)
     run_cli(["round", "--gap", "瞎编的码"],
@@ -286,6 +325,7 @@ def test_session_flow():
             [("第 1 轮打卡", r"第 1/10 轮"), ("盲区记录", r"causal-gap")],
             script=SESSION_SCRIPT)
     run_cli(["round", "--gap", "none", "--scaffold",
+             "--hint", "把条件概率想成：只看满足条件的那批人，再在里面数。",
              "--covered", "定义讲清;机制讲清"],
             [("第 2 轮打卡", r"第 2/10 轮"), ("脚手架计数", r"脚手架 1 次"),
              ("要点覆盖", r"定义讲清")],
@@ -306,7 +346,8 @@ def test_session_flow():
 
 
 def test_session_abort():
-    run_cli(["start", "--concept", "要放弃的概念"], [("开场", r"会话已开场")],
+    write_prep()
+    run_cli(["start", "--concept", "要放弃的概念", "--prep", PREP_FILE], [("开场", r"会话已开场")],
             script=SESSION_SCRIPT)
     run_cli(["abort"], [("放弃确认", r"已放弃本场会话")], script=SESSION_SCRIPT)
     if os.path.exists(STATE_FILE):
@@ -418,6 +459,7 @@ TESTS = [
     test_hook_malformed,
     test_session_flow,
     test_session_abort,
+    test_session_gates,
     test_build_gallery,
     test_install_hooks,
 ]

@@ -30,6 +30,7 @@ GAP_CODES = [
 ]
 MAX_ROUNDS = 10
 WARN_ROUNDS = 8
+MAX_HINT_CHARS = 120  # 脚手架提示上限（≈60-100 汉字，去空白计）
 
 
 def load_state():
@@ -70,17 +71,34 @@ def cmd_start(args):
         print("已有一场进行中的会话。先 status 查看、close 收尾或 abort 放弃；"
               "或用 --force 覆盖。", file=sys.stderr)
         sys.exit(2)
+    # 硬门槛：没有准备文件（含验收要点）不允许开场
+    if not args.prep:
+        print("缺少准备文件。先完成准备（搜索查证 → 第一性拆解 → 写下 5-8 条验收要点），"
+              "存入 sessions/prep/<概念>.md，然后：\n"
+              "  feynman_session.py start --concept \"概念\" --prep sessions/prep/<概念>.md",
+              file=sys.stderr)
+        sys.exit(2)
+    if not os.path.isfile(args.prep):
+        print(f"准备文件不存在：{args.prep}", file=sys.stderr)
+        sys.exit(2)
+    with open(args.prep, encoding="utf-8") as f:
+        prep_lines = [ln for ln in f.read().splitlines() if ln.strip()]
+    if len(prep_lines) < 3:
+        print(f"准备文件内容过少（{len(prep_lines)} 行）：至少要有几条验收要点。",
+              file=sys.stderr)
+        sys.exit(2)
+
     state = {
         "concept": args.concept,
         "started": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "prep": args.prep or "",
+        "prep": args.prep,
         "rounds": [],
         "covered": [],
         "scaffolds": 0,
     }
     save_state(state)
 
-    print(f"会话已开场：{args.concept}")
+    print(f"会话已开场：{args.concept}（准备文件 {len(prep_lines)} 行已验收）")
     print("\n== 准备清单（逐项完成后再开始当听众）==")
     print("1. 研究：搜索查证概念（新名词/新论文/不确定的机制，1-3 个来源）")
     print("2. 拆解：前置知识阶梯 + 核心机制 + 关键因果链 → sessions/prep/")
@@ -120,12 +138,23 @@ def cmd_round(args):
         print(f"非法盲区分类码：{args.gap}\n合法值：{'、'.join(GAP_CODES)} 或 none",
               file=sys.stderr)
         sys.exit(2)
+    if args.scaffold:
+        if not args.hint:
+            print("--scaffold 需要 --hint 传入提示文本（60-100 字白话讲解 + 一个例子）。",
+                  file=sys.stderr)
+            sys.exit(2)
+        hint_len = len("".join(args.hint.split()))
+        if hint_len > MAX_HINT_CHARS:
+            print(f"提示超长：{hint_len} 字符（上限 {MAX_HINT_CHARS}）。"
+                  f"脚手架只给一小段引导，不整课。", file=sys.stderr)
+            sys.exit(2)
     state["rounds"].append({
         "n": n + 1,
         "quote": args.quote or "",
         "gap": args.gap,
         "probe": args.probe or "",
         "scaffold": bool(args.scaffold),
+        "hint": args.hint if args.scaffold else "",
     })
     if args.scaffold:
         state["scaffolds"] += 1
@@ -217,6 +246,7 @@ def main():
     p.add_argument("--quote", help="用户原话")
     p.add_argument("--probe", help="你发出的追问")
     p.add_argument("--scaffold", action="store_true", help="本轮给了提示")
+    p.add_argument("--hint", help="提示文本（--scaffold 时必填，≤120 字符）")
     p.add_argument("--covered", default="", help="本轮覆盖的验收要点，分号分隔")
     p.set_defaults(func=cmd_round)
 
