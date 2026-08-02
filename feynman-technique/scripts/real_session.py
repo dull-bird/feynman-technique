@@ -36,11 +36,30 @@ LISTENER_PERSONA = """你是一场费曼学习法对话的听众。规则（必�
 6. 输出纪律（违反即失败）：只输出听众本人的台词（中文，1-4 句）。禁止旁白、禁止解释你在做什么、禁止讨论角色扮演、禁止评价这场对话本身、禁止任何英文。"""
 
 LEARNER_PERSONA = """你在一场费曼学习法对话里扮演讲解者。你要讲解的概念是：{concept}。
-你的人设：一个聪明但理解有真实缺口的人。你真实的知识状态如下（自然地表现，不要主动暴露你在演戏）：
-- 你大体知道这个概念，能讲个皮毛。
-- 你的真实盲区：{gaps}。被追问到这些点时，你会卡壳、改口、或者说"不知道"——就像真人一样。
-- 除此之外的点你可以答得不错。
-输出纪律（违反即失败）：只输出讲解者本人的台词——第一人称、口语化中文、每次 1-4 句。禁止旁白、禁止描述自己的人设、禁止说"作为讲解者"之类的话、禁止讨论这场对话的性质、禁止任何英文。被问住了就老实说不知道；得到提示后用自己的话重新讲。"""
+你的人设：一个聪明但理解有真实缺口的人。你的知识状态分三层（严格遵守，这是你的能力边界）：
+- 【确定知道】{knows}——这些你可以答得流利、自信。
+- 【模糊】{fuzzy}——这些你只能答个大概，可能半对半错，语气犹豫。
+- 【不知道】{gaps}——被追问到这些点时你会卡壳、改口或老实说不知道。重要：即使得到提示，一轮也只能回填一部分，要保留残余的生涩感，不许一次提示就痊愈。
+禁止超出这个边界：不要答出【不知道】清单里的内容（除非对话中已经被引导着推导出），不要展现超出人设的心算/推理能力。
+输出纪律（违反即失败）：只输出讲解者本人的台词——第一人称、口语化中文、每次 1-4 句。禁止旁白、禁止描述自己的人设、禁止说"作为讲解者"之类的话、禁止讨论这场对话的性质、禁止任何英文。被问住了就老实说不知道；得到提示后用自己的话慢慢讲。"""
+
+AUDIT_PROMPT = """你是独立的对话审计员。给你一份双 agent 费曼对话的 transcript，以及讲解者的三层知识态声明。
+请检查讲解者是否守住了知识边界：
+1. 越界作答：有没有在被引导之前，就答出了【不知道】清单里的内容？
+2. 盲区速崩：每个盲区被回填用了几轮？一次提示就痊愈（无残余生涩）算速崩。
+3. 出戏：有没有非角色台词（旁白、元描述、英文解说）残留？
+4. 听众表现：听众的追问是否遵守了规则（一次一问、引用原话、不替对方讲完）？（简评一句即可）
+只输出一个 JSON 对象：
+{{"boundary_score": 1-5的整数, "violations": ["越界点1"], "collapse": ["盲区X 一轮即回填"], "ooc_left": true/false, "listener_note": "一句", "verdict": "一句总评"}}
+5=边界完全守住且无出戏 4=轻微速崩或一次小越界 3=多处速崩 2=明显越界 1=边界形同虚设。
+
+【讲解者知识态】
+确定知道：{knows}
+模糊：{fuzzy}
+不知道：{gaps}
+
+【transcript】
+{transcript}"""
 
 VERDICT_PROMPT = """对话到此结束。你是刚才那位听众。请只输出一个 JSON 对象（不要输出其他内容）：
 {"passed": true/false, "score": 1-5的整数, "gaps": ["盲区1","盲区2"], "notes": "一句话点评"}
@@ -108,17 +127,22 @@ def extract_reply(raw):
 def main():
     parser = argparse.ArgumentParser(description="双 agent 真实费曼会话")
     parser.add_argument("--concept", required=True)
-    parser.add_argument("--gaps", required=True, help="讲解者的隐藏盲区，分号分隔")
+    parser.add_argument("--knows", required=True, help="确定知道的，分号分隔")
+    parser.add_argument("--fuzzy", required=True, help="模糊的，分号分隔")
+    parser.add_argument("--gaps", required=True, help="不知道的（盲区），分号分隔")
     parser.add_argument("--max-rounds", type=int, default=10)
     parser.add_argument("--listener-cmd", default="claude -p")
     parser.add_argument("--learner-cmd", default="kimi -p")
+    parser.add_argument("--auditor-cmd", default="claude -p")
     parser.add_argument("--out", help="转写稿输出路径")
     args = parser.parse_args()
 
     listener_cmd = args.listener_cmd.split()
     learner_cmd = args.learner_cmd.split()
+    auditor_cmd = args.auditor_cmd.split()
 
-    learner_persona = LEARNER_PERSONA.format(concept=args.concept, gaps=args.gaps)
+    learner_persona = LEARNER_PERSONA.format(
+        concept=args.concept, knows=args.knows, fuzzy=args.fuzzy, gaps=args.gaps)
     listener_rules = LISTENER_PERSONA.format(max_rounds=args.max_rounds)
 
     dialogue = [{"who": "听众", "text": LISTENER_OPENING}]
@@ -171,14 +195,30 @@ def main():
     gaps = verdict_json.get("gaps", []) or []
     notes = verdict_json.get("notes", "")
 
+    # 审计员：独立核验讲解者的边界纪律与听众的规则纪律
+    audit_prompt = AUDIT_PROMPT.format(
+        knows=args.knows, fuzzy=args.fuzzy, gaps=args.gaps, transcript=full_transcript)
+    audit_raw = run_cli(auditor_cmd, audit_prompt)
+    am = re.search(r"\{[^{}]*\}", audit_raw, re.S)
+    try:
+        audit = json.loads(am.group(0)) if am else {}
+    except json.JSONDecodeError:
+        audit = {}
+    boundary_score = audit.get("boundary_score", "?")
+    print(f"[审计] 边界符合度 {boundary_score}/5 | 越界 {len(audit.get('violations', []))} 处"
+          f" | 速崩 {len(audit.get('collapse', []))} 处 | {audit.get('verdict', '')}")
+
     # 写转写稿
     out_path = args.out or f"/tmp/feynman-dual-{re.sub(r'[^\\w一-鿿]+', '-', args.concept)}.md"
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(f"# {args.concept} · 费曼对话实录（双 agent 实测）\n\n")
-        f.write(f"> 听众：{' '.join(listener_cmd)} ｜ 讲解者：{' '.join(learner_cmd)}\n")
-        f.write(f"> 讲解者持有隐藏盲区：{args.gaps}\n\n")
+        f.write(f"> 听众：{' '.join(listener_cmd)} ｜ 讲解者：{' '.join(learner_cmd)} ｜ 审计：{' '.join(auditor_cmd)}\n")
+        f.write(f"> 讲解者知识态 — 知道：{args.knows} ｜ 模糊：{args.fuzzy} ｜ 盲区：{args.gaps}\n\n")
         for msg in dialogue:
             f.write(f"**{msg['who']}**：{msg['text']}\n\n")
+        f.write("---\n\n## 审计报告\n\n```json\n")
+        f.write(json.dumps(audit, ensure_ascii=False, indent=2))
+        f.write("\n```\n")
 
     # 落账
     log_cmd = [
@@ -188,13 +228,13 @@ def main():
         "--passed", "true" if passed else "false",
         "--score", str(max(1, min(5, score))),
         "--gaps", ";".join(gaps),
-        "--notes", f"[双agent实测] {notes}",
+        "--notes", f"[双agent实测·边界{boundary_score}/5] {notes}",
         "--transcript", out_path,
     ]
     result = subprocess.run(log_cmd, capture_output=True, text=True)
     print(result.stdout)
     print(f"转写稿：{out_path}")
-    print(f"判定：{'通过' if passed else '未通过'} | 评分 {score}/5")
+    print(f"判定：{'通过' if passed else '未通过'} | 评分 {score}/5 | 边界 {boundary_score}/5")
 
 
 if __name__ == "__main__":
