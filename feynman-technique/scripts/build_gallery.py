@@ -88,6 +88,7 @@ def main():
             "passed": bool(r.get("passed")),
             "gaps": r.get("gaps", []),
             "notes": r.get("notes", ""),
+            "dual": "双agent实测" in r.get("notes", ""),
             "messages": messages,
             "lang": "zh" if is_chinese(r["concept"]) else "en",
         })

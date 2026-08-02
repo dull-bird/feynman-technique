@@ -14,6 +14,7 @@ window.FEYNMAN_GALLERY = [
       "张力消除以主观矛盾感为准而非客观逻辑"
     ],
     "notes": "开局把认知失调讲成后悔，被具体情境逼到主观张力内核，反直觉案例收尾磕绊但接住了",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -89,6 +90,7 @@ window.FEYNMAN_GALLERY = [
       "低熵能量与生命何以不违背第二定律"
     ],
     "notes": "「熵是混乱度」只是结论不是理解，真正要补的是统计力学那块——先吃透「为什么乱是常态」。",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -187,6 +189,7 @@ window.FEYNMAN_GALLERY = [
       "把检测准确率误当阳性后得病概率、忽略基础概率（患病率）"
     ],
     "notes": "从背公式到用疾病筛查算清基础概率后豁然开朗，边界迁移仍偏生涩",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -269,6 +272,7 @@ window.FEYNMAN_GALLERY = [
       "市值加权权重随价格自动调整的机制（边界问题勉强）"
     ],
     "notes": "主动基金为什么跑不赢卡了三轮，靠提示自己推出零和逻辑；市值加权自动调权机制还欠熟练",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -352,6 +356,7 @@ window.FEYNMAN_GALLERY = [
       "缺具体有理由的权重分布例子"
     ],
     "notes": "会背Q问K答V给，但每个为什么都退回标准做法，先想透匹配与传递为何分离再来",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -442,6 +447,7 @@ window.FEYNMAN_GALLERY = [
       "多头注意力与√d缩放尚未展开"
     ],
     "notes": "匹配与传递分离、训练注入几何意义两个盲区回填到位，边界问题勉强接住，下场攻√d缩放",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -513,6 +519,7 @@ window.FEYNMAN_GALLERY = [
     "passed": true,
     "gaps": [],
     "notes": "[双agent实测] 虽起初混淆单利与复利并卡在机制解释，但在连续追问后已补清利滚利、取款边界、收益拆分及结息频率影响，完整接住了迁移检验。",
+    "dual": true,
     "messages": [
       {
         "who": "listener",

@@ -169,6 +169,7 @@
 
       var top = el("div", "g-card-top");
       top.appendChild(el("span", "g-domain", s.domain));
+      if (s.dual) top.appendChild(el("span", "g-dual", "双 agent 实测"));
       top.appendChild(el("span", scoreClass(s.score), s.score + "/5"));
       card.appendChild(top);
 

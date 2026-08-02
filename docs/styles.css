@@ -1140,3 +1140,16 @@ section { padding: 5.5rem 5vw; }
   font-size: 0.78rem;
   color: var(--chalk-dim);
 }
+
+/* ---------- 双 agent 实测徽章 ---------- */
+.g-dual {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--red);
+  border: 1.5px solid color-mix(in srgb, var(--red) 55%, transparent);
+  border-radius: 4px;
+  padding: 0.1rem 0.5rem;
+  margin-left: auto;
+  margin-right: 0.6rem;
+}
