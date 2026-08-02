@@ -1,7 +1,7 @@
 {
   "fps": 30,
-  "totalFrames": 4605,
-  "totalDurationSec": 153.5,
+  "totalFrames": 4576,
+  "totalDurationSec": 152.53333333333333,
   "scenes": [
     {
       "id": "method",
@@ -83,9 +83,9 @@
     {
       "id": "ending",
       "startFrame": 4319,
-      "durationFrames": 286,
+      "durationFrames": 257,
       "audioStartSec": 144.26666666666668,
-      "audioDurSec": 8.027781
+      "audioDurSec": 7.040938
     }
   ]
 }

@@ -11,7 +11,7 @@ const locale = process.argv[2] === "en" ? "en" : "zh";
 const voice = locale === "en" ? "English_Trustworthy_Man" : "presenter_male";
 // 多音字根治：词/(pin1)(yin1)，分号分隔
 const PRON_ZH =
-  "重读/(chong2)(du2);教学/(jiao4)(xue2);落账/(luo4)(zhang4);成长/(cheng2)(zhang3);回填/(hui2)(tian2);复利/(fu4)(li4);追问/(zhui1)(wen4);角色/(jue2)(se4)";
+  "重读/(chong2)(du2);教学/(jiao4)(xue2);落账/(luo4)(zhang4);成长/(cheng2)(zhang3);回填/(hui2)(tian2);复利/(fu4)(li4);追问/(zhui1)(wen4);角色/(jue2)(se4);外行/(wai4)(hang2);银行/(yin2)(hang2);重点/(zhong4)(dian3)";
 
 const segments = JSON.parse(
   fs.readFileSync(path.join(__dirname, `segments_v5_${locale}.json`), "utf8"),
