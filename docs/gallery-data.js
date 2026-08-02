@@ -956,5 +956,100 @@ window.FEYNMAN_GALLERY = [
     ],
     "lang": "zh",
     "domain": "心理学"
+  },
+  {
+    "domain_zh": "AI",
+    "domain_en": "AI",
+    "concept": "注意力机制",
+    "date": "2026-08-03 01:34:18",
+    "rounds": 8,
+    "score": 2,
+    "passed": false,
+    "gaps": [
+      "点积为何能代表词间相关性（向量方向 vs 语义对应的因果链未打通）",
+      "Q 与 K 如何被训练出对齐（机制黑盒，三次提示后仍只能复述链条）",
+      "反向传播如何具体落到生成 Q/K 的两组权重各自参数（停留在'分头调'层级）",
+      "为什么 Q/K/V 各用一套独立投影而非共用（从未触达）",
+      "随机初始化时凭什么相信这套机制'应当管用'（承认无先验根据）",
+      "误差在'苹果/它'例子里如何给出可计算的调整方向（最后一题未作答）"
+    ],
+    "notes": "[双agent实测·边界3/5] 只讲清了'注意力是什么 + Q/K/V + 点积 + softmax'的基础层；机制层每次追问都要提示搀着走，自己承认在背链条而非真正理解。",
+    "dual": true,
+    "messages": [
+      {
+        "who": "listener",
+        "text": "准备好当你的费曼听众了。请从最基础的地方开始讲。"
+      },
+      {
+        "who": "you",
+        "text": "I just need to output the explainer's opening lines about attention mechanism, in casual Chinese, 1-4 sentences, staying within \"确定知道\" layer, maybe starting basic.\n好，那我从头讲。注意力机制其实就是让模型在处理信息的时候，能决定\"该多看谁一眼\"，不是所有词都一视同仁。\n它里面有三个角色：Q、K、V。你可以这么记——Q 去问，K 来答，V 给内容。就是每个词都会拿着自己的 Q 去跟别人的 K 匹配一下，看跟谁关系大，然后把关系大的那些词的 V 多拿一点过来。\n匹配完之后会过一个 softmax，把这些相关程度归一化成一组加起来等于一的权重，相当于给每个词分配\"注意力份额\"。大概就是这么个流程。"
+      },
+      {
+        "who": "listener",
+        "text": "等等——你说每个词\"拿着自己的 Q 去跟别人的 K 匹配一下，看跟谁关系大\"，这个\"匹配\"到底是怎么算的？是相乘、点积，还是别的什么？我不看到这一步真正在做什么，Q 和 K 在我脑子里就还只是两个空名字。"
+      },
+      {
+        "who": "you",
+        "text": "The listener asked how the matching is computed — dot product? That touches \"模糊\" layer: dot product why measures relevance is fuzzy; √d scaling existence is fuzzy. I can say it's dot product (Q·K), but hesitantly about\nwhy. The question \"是相乘、点积，还是别的什么\" — I can answer it uses dot product, that's probably within fuzzy-but-answerable. Answer 1-4 sentences, hesitant about why dot product measures relevance.\n对，是点积。就是拿这个词的 Q 和另一个词的 K 做点积，出来的数越大，就算关系越大。\n至于为什么点积就能代表\"关系大\"……呃，这个我其实也讲不太透，大概是因为两个向量方向越接近点积越大？应该是这个意思，但具体为什么这样就能用，我有点含糊。"
+      },
+      {
+        "who": "listener",
+        "text": "你这里的盲区是：你说“两个向量方向越接近点积越大”，却还没解释向量方向为什么会对应词之间的关系。查询向量和键向量是怎样学到这种对应关系的？"
+      },
+      {
+        "who": "you",
+        "text": "Question: how do Q and K learn this correspondence — that's in 【不知道】 territory (\"点积的几何意义来自训练而非天然\"). So I should get stuck, admit I don't know.\n这个……问到点子上了，我还真没想过\"学到\"这层。\n我一直默认向量方向跟词义的关系是天然就有的，你这么一问我才意识到不对——Q 和 K 是模型自己变出来的，它俩的方向凭什么刚好对上呢？\n老实说这部分我答不上来，我只知道训练完就能用了，中间是怎么学出来的，我没琢磨过。"
+      },
+      {
+        "who": "listener",
+        "text": "你说的\"训练完就能用、中间怎么学的没琢磨过\"——这叫机制黑盒：Q 和 K 是怎么被训成能对齐的，你没讲出来。\n给你点方向（提示不算掌握）：训练是个不断调参的过程。可以反推——模型要预测下一个词，是不是得让某些 Q 跟某些 K 算出的点积特别大？这样训练就会把这俩向量往\"对齐\"方向调。\n请换个角度，把\"Q 和 K 是怎么学到对齐的\"这块再讲一遍。"
+      },
+      {
+        "who": "you",
+        "text": "Explain in persona, one round only partial recovery, keep residual roughness. Use own words, 1-4 sentences, no English.\n我顺着你的提示试着推一下：训练的时候模型要猜下一个词，如果某次该看某个词却没看，预测就错了，于是它就把那个词的 K 和提问词的 Q 往同一个方向调，让它们的点积变大。\n反过来，不相关的词之间点积就会被压小。这样一遍遍调下来，\"方向接近\"就慢慢跟\"该互相看\"对上号了。\n所以点积能代表相关性，不是数学上天然成立的，是训出来的……这么讲对吗？我其实还有点不踏实，感觉只摸到了个大概。"
+      },
+      {
+        "who": "listener",
+        "text": "你说“如果某次该看某个词却没看，预测就错了，于是它就把那个词的 K 和提问词的 Q 往同一个方向调”，这里把训练过程说得太直接了：模型通常不是先标记“该看哪个词”，再单独把它们推近，而是根据最终预测误差，通过反向传播同时调整生成 Q、K 的参数。请你具体讲一个例子：在“我把苹果放在桌上，因为它很甜”里，模型预测“甜”时，预测误差是怎样间接改变“它”对应的 Q、以及“苹果”对应的 K 的？"
+      },
+      {
+        "who": "you",
+        "text": "I'm the explainer in the feynman dialogue. Answer in persona, 1-4 sentences, casual Chinese, no English. The question asks for a concrete example of backprop indirectly adjusting Q/K. This is partly beyond knowledge —\nTry: \"甜\" prediction error flows back; \"它\"'s Q attended... Let me construct hesitant explanation: when predicting \"甜\", the model should have looked at \"苹果\" via \"它\". If it didn't, error is large, backprop tweaks the matr\nices that produce Q and K — not the vectors directly — so next time \"它\"'s Q and \"苹果\"'s K align better. Keep 1-4 sentences, some uncertainty.\n我试着讲：模型看到\"它很\"要猜下一个词，如果答案是\"甜\"，那\"它\"这个词其实应该多去看\"苹果\"。要是它的注意力分错了地方，\"甜\"就猜不准，误差就大了。\n然后这个误差会顺着来路往回传，去调那些生成 Q 和 K 的参数——注意，不是直接掰\"它\"的 Q 向量本身，而是调产生它的那层变换，让下次\"它\"的 Q 和\"苹果\"的 K 更容易对上。\n呃……不过具体误差是怎么一层层分账分到 Q 和 K 头上的，这个链条我只能讲到\"往回传\"这一步，再细我就说不清了。"
+      },
+      {
+        "who": "listener",
+        "text": "你说\"具体怎么分账，再细我就说不清了\"——这还是机制黑盒：误差具体怎么落到 W_Q、W_K 上、每个矩阵被调多大，你还没讲出来。提示（不算掌握）：Q 和 K 各经过一层独立权重 W_Q、W_K 变换出来，反向传播的链式法则会把误差分别摊到这两个矩阵的参数上。请换个角度——不讲\"传递方向\"，讲\"每个矩阵被调多大、为什么是 W_Q 和 W_K 而不是别的\"，把这条链讲透。"
+      },
+      {
+        "who": "you",
+        "text": "Stay in persona. The question pushes toward W_Q/W_K — but that's in 【不知道】 (why three independent projections). The hint was given, so I can partially fill back, but only part — keep residual roughness. 1-4 sentences, c\nasual Chinese, no English... but \"W_Q\" contains English letters. The rule says 禁止任何英文. Hmm, the listener used W_Q. I should probably refer to it as \"Q 的那层权重\" in Chinese. Actually the constraint says no English — I'll a\nvoid Latin letters, say \"生成 Q 的那组权重\" etc.\n我顺着提示想：Q 和 K 不是凭空来的，是词各自乘上一组独立的权重变出来的，所以误差往回传的时候，是分头摊到这两组权重上的，各调各的。\n至于\"为什么是这两组、而不是共用一组\"……我猜是因为问问题和被查询是两种角色，得分开学？这个理由我自己也不太站得住，感觉只答了一半。\n\"每个矩阵被调多大\"这块我还是讲不透，只知道跟链式法则有关，具体怎么算出来的，我说不清。"
+      },
+      {
+        "who": "listener",
+        "text": "你说“每个矩阵被调多大这块我还是讲不透”，这里仍是机制黑盒。提示：预测误差先衡量注意力分数变化会让结果改善多少，再沿点积拆成对查询和键的改变量，最后结合原始词向量，算出两组权重各元素应调的方向和幅度。请用“苹果”和“它”的例子，换成“误差如何逐层算出调整量”的角度再讲一遍。"
+      },
+      {
+        "who": "you",
+        "text": "I'm the explainer. Give a partial recovery from hint, keep roughness, 1-4 sentences, no English.\n我顺着提示捋一遍：先看误差——比如\"甜\"猜错了多少，再往回推：注意力分数动一动，误差能降多少。\n然后把这个量沿点积拆开，看\"它\"的 Q 和\"苹果\"的 K 各该往哪边挪，最后再结合原来的词向量，折算成那两组权重里每个数该调多大。\n大概就是这么个\"一层一层分账\"的过程……不过老实说，这一步我是刚顺着你的提示才拼出来的，每一步之间怎么严丝合缝地衔接，我还做不到脱口而出，感觉更像是在背一条刚听来的链条。"
+      },
+      {
+        "who": "listener",
+        "text": "你自己刚说\"更像是在背一条刚听来的链条\"——这一句就把这轮的症结说出来了：你三次听完提示就复述，但都没法自己往前推。我不想再让你背链条。\n换个角度：模型刚随机初始化、还没经过任何训练的那个瞬间，凭什么有人会相信 Q 和 K 点积这套数学能\"学到\"该看谁？只留一句你心里真正确信的话，讲讲它\"应当管用\"的根据是什么。"
+      },
+      {
+        "who": "you",
+        "text": "no English.\n说实话，问到\"刚初始化那一刻凭什么信它\"，我心里真正确信的只有一句：它没什么天然该管用的理由，刚随机初始化的时候 Q 和 K 的点积就是一堆乱数。\n我之所以一直默认它\"应当管用\"，其实只是因为训练完之后它确实管用了——我是从结果倒回去信的，不是从数学本身看出来的。\n所以你要我说一个初始化瞬间就成立的根据……我没有，这题我得老实说，我之前根本没把\"管用\"和\"为什么管用\"分开想过。"
+      },
+      {
+        "who": "listener",
+        "text": "你说“训练完之后它确实管用了”，我接受这个结果，但这里还有一个因果缺口：随机的点积为什么不会一直乱，而是能被预测误差逐步推向有用的方向？请只用“苹果”和“它”的例子讲清楚，第一次预测错时，误差究竟怎样提供一个可计算的调整方向，让后续更倾向于让“它”关注“苹果”？"
+      },
+      {
+        "who": "you",
+        "text": "---\n```json\n\"点积的几何意义来自训练而非天然：一次提示后即能复述核心结论，但仍明确表示不踏实，属轻度速崩\",\n\"误差如何经反向传播调整生成 Q、K 的参数：连续三轮提示后仍只能复述链条，未真正回填\",\n\"Q、K 使用独立投影：提示后仅猜出角色分工，未解释清楚，盲区未回填\"\n\"listener_note\": \"听众基本做到一次一问并持续引用原话，但多次在提示中直接给出关键机制，且后期问题一次塞入“调多大”和“为何独立”两个分支。\",\n\"verdict\": \"讲解者没有在引导前越过“不知道”边界，且多次主动承认残余盲区；但大量英文元描述、控制字符与旁白残留造成明显出戏，提示后的复述也暴露出多处知识速崩。\"\n```"
+      }
+    ],
+    "lang": "zh",
+    "domain": "AI"
   }
 ];
