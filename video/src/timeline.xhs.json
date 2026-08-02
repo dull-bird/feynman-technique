@@ -1,0 +1,70 @@
+{
+  "fps": 30,
+  "totalFrames": 1841,
+  "totalDurationSec": 61.36666666666667,
+  "scenes": [
+    {
+      "id": "hook",
+      "startFrame": 0,
+      "durationFrames": 221,
+      "audioStartSec": 0.15,
+      "audioDurSec": 6.588
+    },
+    {
+      "id": "pain",
+      "startFrame": 221,
+      "durationFrames": 211,
+      "audioStartSec": 7.516666666666667,
+      "audioDurSec": 6.269406
+    },
+    {
+      "id": "standard",
+      "startFrame": 432,
+      "durationFrames": 215,
+      "audioStartSec": 14.55,
+      "audioDurSec": 6.397125
+    },
+    {
+      "id": "steps",
+      "startFrame": 647,
+      "durationFrames": 273,
+      "audioStartSec": 21.716666666666665,
+      "audioDurSec": 8.347594
+    },
+    {
+      "id": "gap",
+      "startFrame": 920,
+      "durationFrames": 142,
+      "audioStartSec": 30.816666666666666,
+      "audioDurSec": 3.964281
+    },
+    {
+      "id": "product",
+      "startFrame": 1062,
+      "durationFrames": 293,
+      "audioStartSec": 35.55,
+      "audioDurSec": 9
+    },
+    {
+      "id": "rules",
+      "startFrame": 1355,
+      "durationFrames": 182,
+      "audioStartSec": 45.31666666666666,
+      "audioDurSec": 5.294156
+    },
+    {
+      "id": "record",
+      "startFrame": 1537,
+      "durationFrames": 163,
+      "audioStartSec": 51.38333333333333,
+      "audioDurSec": 4.655625
+    },
+    {
+      "id": "cta",
+      "startFrame": 1700,
+      "durationFrames": 141,
+      "audioStartSec": 56.81666666666666,
+      "audioDurSec": 3.925469
+    }
+  ]
+}

@@ -14,6 +14,7 @@ window.FEYNMAN_GALLERY = [
       "jargon-dodge: 'disorder' never replaced by a countable definition"
     ],
     "notes": "Learner stuck at 'entropy is disorder'; statistical interpretation never landed in own words. Review microstates/multiplicity (S = k ln W), then retry.",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -96,6 +97,7 @@ window.FEYNMAN_GALLERY = [
       "sequential Bayesian updating (two-test recompute, independence assumption)"
     ],
     "notes": "Started by reciting the formula; cornered on why P(B) is in the denominator, then breakthrough via disease-screening base-rate table; boundary (P(A|B) vs P(B|A), prosecutor's fallacy) solid; stress test on two-test updating passed with loose arithmetic.",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -177,6 +179,7 @@ window.FEYNMAN_GALLERY = [
       "dot product vs cosine similarity blurred"
     ],
     "notes": "Recites 'Q asks, K answers, V gives' by rote; mechanism stays a black box even after a hint; honest about being stuck but cannot backfill.",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -267,6 +270,7 @@ window.FEYNMAN_GALLERY = [
       "could not explain why belief conflict is aversive (causal-gap, needed a hint, then rebuilt with own example)"
     ],
     "notes": "Passed at 4: regret vs dissonance boundary forced by the buying scenario; effort-justification stress test landed but shaky on belief-change vs reported-change.",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -349,6 +353,7 @@ window.FEYNMAN_GALLERY = [
       "efficient markets / priced-in used as mechanism black box"
     ],
     "notes": "Fee-only explanation collapsed under probing; poker-rake scaffold unlocked a genuine derivation, strong free-rider insight, slightly shaky on manager-skill stress test",
+    "dual": false,
     "messages": [
       {
         "who": "you",
@@ -440,6 +445,7 @@ window.FEYNMAN_GALLERY = [
       "multi-head details correct but not fully expanded"
     ],
     "notes": "Comeback 2→4: all five old gaps backfilled — Q/K/V as matching-vs-content separation, dot product as trained directional alignment, dot-vs-cosine fenced, self-generated worked example; edge cases (sparse variants, √d derivation) still thin.",
+    "dual": false,
     "messages": [
       {
         "who": "you",
