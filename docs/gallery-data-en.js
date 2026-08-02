@@ -425,5 +425,88 @@ window.FEYNMAN_GALLERY = [
     ],
     "lang": "en",
     "domain": "Finance"
+  },
+  {
+    "domain_zh": "AI",
+    "domain_en": "AI",
+    "concept": "Attention Mechanism",
+    "date": "2026-08-02 22:02:45",
+    "rounds": 7,
+    "score": 4,
+    "passed": true,
+    "gaps": [
+      "sparse-attention variant names and mechanisms shaky (couldn't name Longformer/Linformer/Performer confidently)",
+      "√d scaling argument sketched, not derivable cold (variance-grows-with-d under independence assumption)",
+      "multi-head details correct but not fully expanded"
+    ],
+    "notes": "Comeback 2→4: all five old gaps backfilled — Q/K/V as matching-vs-content separation, dot product as trained directional alignment, dot-vs-cosine fenced, self-generated worked example; edge cases (sparse variants, √d derivation) still thin.",
+    "messages": [
+      {
+        "who": "you",
+        "text": "OK, take two. Let me redo the attention mechanism. When a model reads \"The animal didn't cross the street because it was too tired\", the word \"it\" needs to figure out which earlier word it refers to. Attention is the mechanism for that: every word gets to look at every other word and decide how much to listen to each one, then mixes in what it hears. The result is that \"it\" ends up listening mostly to \"animal\" and a bit to \"street\"."
+      },
+      {
+        "who": "listener",
+        "text": "✅ This time you opened with a concrete sentence you built yourself instead of a definition — \"it ends up listening mostly to animal\" is a real worked example, which was missing last session.\n🔍 [causal-gap]:\n> \"every word gets to look at every other word and decide how much to listen\"\nLast time you said \"decide\" but the deciding stayed a black box. Walk me through how one word actually decides how much to listen to another — what does it compute?\n**Round 2**"
+      },
+      {
+        "who": "you",
+        "text": "Each word produces three vectors from the same embedding: a query, a key, and a value. I think of it this way now — the query encodes \"what I'm looking for\", the key encodes \"what I advertise\", and the value carries \"what I actually pass on\". The word \"it\" has a query that roughly says \"I'm a pronoun looking for a noun that could be my subject\". Every other word holds up its key saying what it is. \"It\" compares its query against every key, and the comparison scores become the listening weights. Then it collects the values of the high-scoring words, weighted by those scores."
+      },
+      {
+        "who": "listener",
+        "text": "✅ The three phrases \"what I'm looking for / what I advertise / what I actually pass on\" are your own words, not the textbook recitation from last time — that's genuine compression.\n🔍 [causal-gap]:\n> \"three vectors from the same embedding\"\nThis is exactly where you stalled before. Why three separate projections at all? Why can't one vector per word do the matching AND carry the content?\n**Round 3**"
+      },
+      {
+        "who": "you",
+        "text": "Because matching and content are two different jobs, and one vector would be torn between them. Think of a job fair: my badge says what role I'm hiring for — that's the query. Your badge says what role you do — that's the key. Badges exist purely so we can find each other. But once we match, what you hand me isn't your badge — it's your resume, the actual content. That's the value. If a word's vector had to be both its badge and its resume, then to be findable it would have to distort its content, and to carry rich content it would become unfindable. Separating them means the model can learn matching geometry and content geometry independently. Also asymmetry: \"it\" asks about \"animal\", but \"animal\" shouldn't have to ask about \"it\" the same way — the match is directional, and you only get that with separate Q and K."
+      },
+      {
+        "who": "listener",
+        "text": "✅ The badge/resume split survives pressure: \"to be findable it would have to distort its content\" is a real why, not a restatement — and you caught the asymmetry point on your own.\n🔍 [mechanism-blackbox]:\n> \"compares its query against every key\"\nName the actual comparison operation, and this time tell me why that operation counts as \"relevance\" — last session you called it \"just how it works\".\n**Round 4**"
+      },
+      {
+        "who": "you",
+        "text": "It's a dot product between the query vector and each key vector. And here's why that means relevance, which I couldn't say before: a dot product is |q||k| times the cosine of the angle between them. So at its core it measures directional alignment — how much two vectors point the same way. The reason \"pointing the same way\" can mean \"relevant to each other\" is that the projection matrices are trained. Gradient descent shapes W_Q and W_K so that words which should attend to each other get projected into aligned directions, and words that shouldn't get pushed into orthogonal or opposing directions. Relevance isn't inherent in the dot product — it's baked into the geometry by training. The dot product is just the ruler; training decides what the ruler measures."
+      },
+      {
+        "who": "listener",
+        "text": "✅ \"Relevance isn't inherent in the dot product — it's baked into the geometry by training\" is the sentence you were missing last time; the ruler line earns it.\n🔍 [boundary-blur]:\n> \"|q||k| times the cosine\"\nYou just wrote the cosine formula. Last session you blurred dot product and cosine similarity. If cosine already measures pure alignment, why does attention use the raw dot product instead of normalizing to cosine?\n**Round 5**"
+      },
+      {
+        "who": "you",
+        "text": "Cosine strips out magnitude — it only keeps direction. But the magnitude of the key and query carries useful signal: a word that's very confident or very salient can have a larger-norm vector, and the raw dot product lets that through. Cosine similarity would flatten every match to pure angle and throw that away. Also, the softmax right after does its own normalization across all the keys anyway, so normalizing each pair to cosine first would be double bookkeeping and would actually hurt — you'd lose the ability for one word to dominate the distribution when it's really important."
+      },
+      {
+        "who": "listener",
+        "text": "✅ Correct separation: \"cosine strips out magnitude... softmax does its own normalization across keys\" — the two concepts are now cleanly fenced, which fixes an old logged gap.\n🔍 [mechanism-blackbox]:\n> \"the softmax right after\"\nSpeaking of softmax — the scores get divided by the square root of the dimension before softmax. Why that specific correction? What goes wrong without it?\n**Round 6**"
+      },
+      {
+        "who": "you",
+        "text": "Right, the scaling. The rough argument: a dot product over d dimensions sums d terms, so as d grows, the scores grow — the variance scales with d, so typical score magnitude grows like root-d. Feeding huge numbers into softmax makes it saturate: one score wins almost everything, the rest get ~zero weight, and gradients through the winner-take-all softmax vanish, so training stalls. Dividing by √d pulls the scores back into a range where softmax stays soft and gradients flow. I'll be honest though — I can sketch the variance argument but I couldn't re-derive it cold or tell you the exact moment the variance picks up the factor of d. It depends on assumptions about the components being roughly independent with unit variance, and I'd have to look up the clean derivation."
+      },
+      {
+        "who": "listener",
+        "text": "✅ The direction is right — \"variance scales with d... softmax saturates... gradients vanish\" is the correct causal chain, and you flagged your own fuzziness instead of papering over it.\n🔍 [edge-case-blind]:\n> \"every word gets to look at every other word\"\nFrom your round-one framing: every pair talks to every pair, so the cost is n² in the sequence length. What do real systems do when n gets huge — do they really compute the full n² grid?\n**Round 7**"
+      },
+      {
+        "who": "you",
+        "text": "No — n² blows up fast, so long-context models don't compute the full grid. I know there are families of fixes: some restrict each word to a local window plus a few global tokens, some approximate the attention matrix with low-rank tricks, some use sparse patterns or hashing to pick which pairs are worth computing, and there are kernel-based approaches that avoid materializing the n² matrix at all. But honestly I can't confidently name the specific named variants — like which paper is which, Long-something, Lin-something, Performer? I know the ideas exist and roughly what family each belongs to, but the names and their exact trade-offs are shaky."
+      },
+      {
+        "who": "listener",
+        "text": "✅ You correctly identified the pressure point (\"n² blows up fast\") and the honest taxonomy — local windows, low-rank, sparse patterns, kernels — without bluffing names you don't own.\n🔍 [edge-case-blind]:\n> \"Long-something, Lin-something\"\nConfirmed: the variant names and their concrete mechanisms are a real gap, not a slip. (For the record: the sliding-window-plus-global one is Longformer; the low-rank one is Linformer — verify against your own sources, don't take my word as the lesson.)\n💬 Final check — your core explanation is essentially complete. One last test: multi-head attention. Why run several small attention heads in parallel instead of one big one?"
+      },
+      {
+        "who": "you",
+        "text": "Because one head means one matching geometry — one notion of \"relevant\". But language has many relation types at once: subject-verb agreement, pronoun reference, coreference, semantic association. With h heads, each head gets its own W_Q, W_K, W_V, so one head can specialize in syntax — \"it\" tracking its antecedent — while another tracks topic-level similarity. The dimension gets split across heads, so it's not more compute, it's more kinds of matching for the same budget. The outputs get concatenated and mixed back together."
+      },
+      {
+        "who": "listener",
+        "text": "✅ \"Not more compute, more kinds of matching for the same budget\" — clean close, and the head-specialization story ties back to your badge/resume framing from round 3.\n---\n**Verdict: PASS — score 4/5**\nPassed standards:\n1. Terminology independent — Q/K/V explained as look-for/advertise/pass-on, no circular terms.\n2. Causal chain — three projections exist because matching and content are different jobs (findability vs richness), with the asymmetry argument.\n3. Mechanism transparent — dot product as directional alignment, geometry shaped by training, self-generated worked sentence (\"it\" → \"animal\").\n4. Boundary distinction — dot product vs cosine similarity now cleanly separated (magnitude signal + softmax normalization).\nWhy not 5: the pressure test was only half-held — sparse-attention variant names and mechanisms shaky (\"Long-something, Lin-something\"), and the √d scaling argument sketched but not derivable cold. Multi-head reasoning was solid but high-level.\nLogged gaps:\n- Sparse-attention variant names and exact mechanisms shaky (couldn't name Longformer / Linformer / Performer confidently)\n- √d scaling argument sketched from memory, not derivable cold (variance-grows-with-d under independence assumption)\n- Multi-head details correct but not fully expanded (how outputs are mixed, why split rather than add dimensions)\nProgress vs previous session: 2 → 4. All five gaps from last time (Q/K/V justification, dot-product-as-relevance, dot-vs-cosine blur, missing worked example, value projection opacity) were demonstrably backfilled this session."
+      }
+    ],
+    "lang": "en",
+    "domain": "AI"
   }
 ];
