@@ -247,6 +247,26 @@
           <p id="progress-trend"></p>
         </div>
       </div>
+
+      <div class="report-terminal" data-reveal>
+        <div class="term-bar" aria-hidden="true">
+          <span class="term-dot term-red"></span><span class="term-dot term-yellow"></span><span class="term-dot term-green"></span>
+          <span class="term-title">Real report output (excerpt)</span>
+        </div>
+        <pre><span class="term-cmd">$ python3 scripts/feynman_log.py report</span>
+== 总体 ==
+对话次数：12 | 通过：8 | 通过率：67% | 平均评分：3.3/5
+
+== 各概念 ==
+- Attention Mechanism：2 次，评分 <span class="term-hl">2 → 4</span>，已掌握 ✅
+    2026-08-02 01:16 | 8 轮 | 未通过 | 2/5 | 盲区：dot product 为何衡量相关性…
+    2026-08-02 22:02 | 7 轮 | 通过   | 4/5 | 盲区：稀疏注意力方案名记不准
+- 熵 / Entropy：各 1 次，评分 2，尚未通过
+- 贝叶斯定理 / Bayes' Theorem：各 1 次，评分 4，已掌握 ✅
+- 指数基金 / Index Funds：各 1 次，评分 4，已掌握 ✅
+- 认知失调 / Cognitive Dissonance：各 1 次，评分 4，已掌握 ✅</pre>
+        <p class="term-note">Real output from 2026-08-02 (abridged; the CLI currently prints Chinese). The full report includes rounds, gap details, and notes for every session.</p>
+      </div>
     </section>
 
     <!-- ============ Export to Obsidian ============ -->
@@ -283,7 +303,7 @@
         <span class="pipe-arrow" aria-hidden="true">→</span>
         <span class="pipe-node">JSONL log</span>
         <span class="pipe-arrow" aria-hidden="true">→</span>
-        <span class="pipe-node">Reports · Obsidian · Gallery</span>
+        <span class="pipe-node">Reports · Obsidian</span>
       </div>
 
       <div class="tech-grid">

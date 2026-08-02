@@ -1082,3 +1082,61 @@ section { padding: 5.5rem 5vw; }
   .pipeline { flex-direction: column; }
   .pipe-arrow { transform: rotate(90deg); }
 }
+
+/* ---------- report 真实输出终端 ---------- */
+.report-terminal {
+  max-width: 760px;
+  margin: 1.6rem auto 0;
+  background: var(--ink-deep);
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  box-shadow: 8px 10px 0 color-mix(in srgb, var(--ink) 12%, transparent);
+  overflow: hidden;
+}
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.9rem;
+  background: color-mix(in srgb, var(--chalk) 6%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--chalk) 10%, transparent);
+}
+
+.term-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+}
+
+.term-red { background: #E0614F; }
+.term-yellow { background: var(--yellow); }
+.term-green { background: var(--sage); }
+
+.term-title {
+  margin-left: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--chalk-dim);
+  letter-spacing: 0.04em;
+}
+
+.report-terminal pre {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.75;
+  color: var(--chalk);
+  padding: 1rem 1.2rem;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.term-cmd { color: var(--yellow); }
+.term-hl { color: var(--yellow); font-weight: 600; }
+
+.term-note {
+  padding: 0 1.2rem 0.9rem;
+  font-size: 0.78rem;
+  color: var(--chalk-dim);
+}

@@ -246,6 +246,27 @@
           <p id="progress-trend"></p>
         </div>
       </div>
+
+      <div class="report-terminal" data-reveal>
+        <div class="term-bar" aria-hidden="true">
+          <span class="term-dot term-red"></span><span class="term-dot term-yellow"></span><span class="term-dot term-green"></span>
+          <span class="term-title">report 的真实输出（节选）</span>
+        </div>
+        <pre><span class="term-cmd">$ python3 scripts/feynman_log.py report</span>
+== 总体 ==
+对话次数：12 | 通过：8 | 通过率：67% | 平均评分：3.3/5
+评分趋势：前 6 次平均 3.3 → 后 6 次平均 3.3
+
+== 各概念 ==
+- 注意力机制（Transformer）：2 次，评分 <span class="term-hl">2 → 4</span>，已掌握 ✅
+    2026-08-01 18:45 | 7 轮 | 未通过 | 2/5 | 盲区：Q/K/V为何是三套独立投影…
+    2026-08-01 18:46 | 6 轮 | 通过   | 4/5 | 盲区：边界问题勉强，下场攻√d缩放
+- 熵：1 次，评分 2，尚未通过
+- 贝叶斯定理：1 次，评分 4，已掌握 ✅
+- 指数基金：1 次，评分 4，已掌握 ✅
+- 认知失调：1 次，评分 4，已掌握 ✅</pre>
+        <p class="term-note">以上是 2026-08-02 的真实输出节选；完整报告还包含每场的轮数、盲区明细与备注。</p>
+      </div>
     </section>
 
     <!-- ============ 导出到 Obsidian ============ -->
@@ -282,7 +303,7 @@
         <span class="pipe-arrow" aria-hidden="true">→</span>
         <span class="pipe-node">JSONL 日志</span>
         <span class="pipe-arrow" aria-hidden="true">→</span>
-        <span class="pipe-node">报告 · Obsidian · Gallery</span>
+        <span class="pipe-node">报告 · Obsidian</span>
       </div>
 
       <div class="tech-grid">
