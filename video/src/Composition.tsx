@@ -53,7 +53,12 @@ const Video: React.FC<{ lang: "zh" | "en"; timeline: Timeline }> = ({
             durationInFrames={s.durationFrames}
           >
             <SceneFade durationInFrames={s.durationFrames}>
-              <Scene lang={lang} />
+              {s.id === "nl" ? (
+                // nl 窗口内部按 56% 拆分：前半真实 report，后半导出
+                <NLScene lang={lang} durationInFrames={s.durationFrames} />
+              ) : (
+                <Scene lang={lang} />
+              )}
             </SceneFade>
           </Sequence>
         );

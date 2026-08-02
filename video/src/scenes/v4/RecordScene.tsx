@@ -58,20 +58,71 @@ const T: Record<"zh" | "en", { title: string; lines: Line[] }> = {
   },
 };
 
-/**
- * record：终端展示真实的 feynman_log.py report 输出（2026-08-02 真实数据）。
- * 注意：当前 v4 时间轴未包含此场景（v4 反馈④移除了它），组件备用。
- */
-export const RecordScene: React.FC<{ lang: "zh" | "en" }> = ({ lang }) => {
+/** 终端报告面板（可复用，delaySec 控制首行出现时间） */
+export const ReportPanel: React.FC<{
+  lang: "zh" | "en";
+  delaySec?: number;
+}> = ({ lang, delaySec = 0.6 }) => {
   const frame = useCurrentFrame();
   const f = (s: number) => Math.round(s * 30);
   const t = T[lang];
 
-  const cardIn = interpolate(frame, [f(0.6), f(1.4)], [0, 1], {
+  const cardIn = interpolate(frame, [f(delaySec), f(delaySec + 0.8)], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.bezier(0.16, 1, 0.3, 1),
   });
+
+  return (
+    <div
+      style={{
+        width: 1520,
+        borderRadius: 18,
+        backgroundColor: "#122119",
+        border: `2px solid ${COLORS.sage}44`,
+        boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
+        padding: "30px 48px",
+        fontFamily: MONO,
+        fontSize: 30,
+        lineHeight: 1.6,
+        whiteSpace: "pre",
+        opacity: cardIn,
+        translate: `0 ${(1 - cardIn) * 24}px`,
+      }}
+    >
+      {t.lines.map((l, i) => {
+        const o = interpolate(
+          frame,
+          [f(delaySec + 1.0 + i * 0.5), f(delaySec + 1.5 + i * 0.5)],
+          [0, 1],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+        );
+        return (
+          <div
+            key={i}
+            style={{
+              color: l.color,
+              opacity: o,
+              backgroundColor: l.highlight ? `${COLORS.yellow}22` : undefined,
+              borderLeft: l.highlight
+                ? `4px solid ${COLORS.yellow}`
+                : "4px solid transparent",
+              paddingLeft: 12,
+              marginLeft: -16,
+              borderRadius: 4,
+            }}
+          >
+            {l.text}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export const RecordScene: React.FC<{ lang: "zh" | "en" }> = ({ lang }) => {
+  const f = (s: number) => Math.round(s * 30);
+  const t = T[lang];
 
   return (
     <div
@@ -98,49 +149,7 @@ export const RecordScene: React.FC<{ lang: "zh" | "en" }> = ({ lang }) => {
         }}
       />
 
-      <div
-        style={{
-          width: 1520,
-          borderRadius: 18,
-          backgroundColor: "#122119",
-          border: `2px solid ${COLORS.sage}44`,
-          boxShadow: "0 24px 60px rgba(0,0,0,0.35)",
-          padding: "30px 48px",
-          fontFamily: MONO,
-          fontSize: 30,
-          lineHeight: 1.6,
-          whiteSpace: "pre",
-          opacity: cardIn,
-          translate: `0 ${(1 - cardIn) * 24}px`,
-        }}
-      >
-        {t.lines.map((l, i) => {
-          const o = interpolate(
-            frame,
-            [f(1.6 + i * 0.55), f(2.1 + i * 0.55)],
-            [0, 1],
-            { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
-          );
-          return (
-            <div
-              key={i}
-              style={{
-                color: l.color,
-                opacity: o,
-                backgroundColor: l.highlight ? `${COLORS.yellow}22` : undefined,
-                borderLeft: l.highlight
-                  ? `4px solid ${COLORS.yellow}`
-                  : "4px solid transparent",
-                paddingLeft: 12,
-                marginLeft: -16,
-                borderRadius: 4,
-              }}
-            >
-              {l.text}
-            </div>
-          );
-        })}
-      </div>
+      <ReportPanel lang={lang} delaySec={0.6} />
     </div>
   );
 };
