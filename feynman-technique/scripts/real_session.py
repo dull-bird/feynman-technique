@@ -27,29 +27,60 @@ METHOD_MD = os.path.join(HERE, "..", "references", "method.md")
 
 LISTENER_OPENING = "准备好当你的费曼听众了。请从最基础的地方开始讲。"
 
-LISTENER_RULES = """你是一场费曼学习法对话的听众。规则（必须严格遵守）：
+LISTENER_PERSONA = """你是一场费曼学习法对话的听众。规则（必须严格遵守）：
 1. 你是零基础但逻辑严谨的听众。用户负责讲，你只负责复述和追问，绝不替用户讲完。
 2. 每轮只问一个最关键的问题，必须引用对方原话。
 3. 盲区分类（选一个）：factual-error 事实错误 / jargon-dodge 术语循环 / causal-gap 因果缺口 / mechanism-blackbox 机制黑盒 / boundary-blur 边界模糊 / broken-analogy 类比失灵 / edge-case-blind 边界盲。事实错误优先。
 4. 对方说"不知道"或打太极时：指出盲区，可给一段 60-100 字提示，但提示后的复述不算掌握，必须换角度重讲。
 5. 通过标准（五条齐备）：术语独立、因果链、机制透明（含具体例子）、边界区分、压力测试。达标后输出一行"本轮通过"，并简述讲清了什么；未达标最多 {max_rounds} 轮，届时输出一行"本轮未通过"并总结关键盲区。
-6. 你的输出格式：直接输出你要对讲解者说的话（中文，1-4 句），不要输出任何旁白、标签或分析。"""
+6. 输出纪律（违反即失败）：只输出听众本人的台词（中文，1-4 句）。禁止旁白、禁止解释你在做什么、禁止讨论角色扮演、禁止评价这场对话本身、禁止任何英文。"""
 
 LEARNER_PERSONA = """你在一场费曼学习法对话里扮演讲解者。你要讲解的概念是：{concept}。
 你的人设：一个聪明但理解有真实缺口的人。你真实的知识状态如下（自然地表现，不要主动暴露你在演戏）：
 - 你大体知道这个概念，能讲个皮毛。
 - 你的真实盲区：{gaps}。被追问到这些点时，你会卡壳、改口、或者说"不知道"——就像真人一样。
 - 除此之外的点你可以答得不错。
-要求：用第一人称、口语化中文回答，每次 1-4 句。不要加任何旁白或标签。被问住了就老实说不知道；得到提示后用自己的话重新讲。"""
+输出纪律（违反即失败）：只输出讲解者本人的台词——第一人称、口语化中文、每次 1-4 句。禁止旁白、禁止描述自己的人设、禁止说"作为讲解者"之类的话、禁止讨论这场对话的性质、禁止任何英文。被问住了就老实说不知道；得到提示后用自己的话重新讲。"""
 
 VERDICT_PROMPT = """对话到此结束。你是刚才那位听众。请只输出一个 JSON 对象（不要输出其他内容）：
 {"passed": true/false, "score": 1-5的整数, "gaps": ["盲区1","盲区2"], "notes": "一句话点评"}
 评分标准：1=术语堆砌即卡壳 2=只讲是什么 3=基本讲清但有未回填盲区 4=五条标准达成四条以上 5=全部达成且接住连续追问。"""
 
+# 出戏检测：元描述/导演旁白/讨论剧情本身
+OOC_PATTERNS = re.compile(
+    r"role.?play|as the (explainer|listener|speaker)|I need to (continue|respond)|"
+    r"^output only|^just output|^continue as|speaker (should|answers)|^answer:|"
+    r"^i'm playing|^i am playing|"
+    r"本次对话是|角色扮演|Teach Me|扮演讲解者|扮演听众|"
+    r"用户扮演|我扮演|继续扮演|这是一个.*测试|这不是真实",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+ANSI_RE = re.compile(r"\x1b\[[0-9;?]*[a-zA-Z]|\x1b\][^\x07]*\x07|\x1b[()><=][0-9;]?|\x1b[78]|\x1b\[[0-9;?]*[hlm]")
+
+OOC_RETRY_HINT = "\n\n【系统警告】你刚才的回复包含了旁白或元描述。只允许输出角色本人的台词，任何关于角色、扮演、对话性质的讨论都禁止。请重新输出，只说台词："
+
+
+def run_role_turn(cmd, prompt, role, timeout=180):
+    """驱动一个角色回合：先剥掉开头出戏行，整体出戏则带警告重试一次。"""
+    reply = extract_reply(run_cli(cmd, prompt, timeout))
+    lines = reply.splitlines()
+    while lines and OOC_PATTERNS.search(lines[0]):
+        print(f"  [{role}开头出戏行已剥除] {lines[0][:60]}…")
+        lines = lines[1:]
+    reply = "\n".join(lines).strip()
+    if reply and not OOC_PATTERNS.search(reply):
+        return reply
+    print(f"  [{role}整体出戏，重试] {reply[:60] or '(空)'}…")
+    reply2 = extract_reply(run_cli(cmd, prompt + OOC_RETRY_HINT, timeout))
+    lines2 = [ln for ln in reply2.splitlines() if not OOC_PATTERNS.search(ln)]
+    return "\n".join(lines2).strip() or reply
+
 
 def run_cli(cmd, prompt, timeout=180):
-    """pexpect 驱动一次 CLI 调用，返回 stdout。"""
+    """pexpect 驱动一次 CLI 调用，返回 stdout。加宽终端避免输出折行。"""
     child = pexpect.spawn(cmd[0], cmd[1:] + [prompt], encoding="utf-8", timeout=timeout)
+    child.setwinsize(50, 220)
     try:
         child.expect([pexpect.EOF, pexpect.TIMEOUT])
         out = child.before or ""
@@ -61,7 +92,8 @@ def run_cli(cmd, prompt, timeout=180):
 
 
 def extract_reply(raw):
-    """清理 CLI 输出：去掉空行、resume 提示行、列表圆点。"""
+    """清理 CLI 输出：去 ANSI 控制序列、空行、resume 提示行、列表圆点。"""
+    raw = ANSI_RE.sub("", raw)
     lines = []
     for ln in raw.splitlines():
         ln = ln.strip()
@@ -87,7 +119,7 @@ def main():
     learner_cmd = args.learner_cmd.split()
 
     learner_persona = LEARNER_PERSONA.format(concept=args.concept, gaps=args.gaps)
-    listener_rules = LISTENER_RULES.format(max_rounds=args.max_rounds)
+    listener_rules = LISTENER_PERSONA.format(max_rounds=args.max_rounds)
 
     dialogue = [{"who": "听众", "text": LISTENER_OPENING}]
     print(f"[听众] {LISTENER_OPENING}")
@@ -100,7 +132,7 @@ def main():
         learner_prompt = (f"{learner_persona}\n\n对话到目前为止：\n{transcript_so_far}\n\n"
                           f"现在轮到你（讲解者）回答听众。直接输出你的回答：")
         t0 = time.time()
-        learner_reply = extract_reply(run_cli(learner_cmd, learner_prompt))
+        learner_reply = run_role_turn(learner_cmd, learner_prompt, "讲解者")
         print(f"[讲解者·第{round_no}轮·{time.time()-t0:.0f}s] {learner_reply[:80]}…")
         if not learner_reply:
             print("讲解者无响应，中止。", file=sys.stderr)
@@ -114,7 +146,7 @@ def main():
                            f"对话到目前为止：\n{transcript_so_far}\n\n"
                            f"现在轮到你（听众）回应。直接输出你说的话：")
         t0 = time.time()
-        listener_reply = extract_reply(run_cli(listener_cmd, listener_prompt))
+        listener_reply = run_role_turn(listener_cmd, listener_prompt, "听众")
         print(f"[听众·第{round_no}轮·{time.time()-t0:.0f}s] {listener_reply[:80]}…")
         if not listener_reply:
             print("听众无响应，中止。", file=sys.stderr)
