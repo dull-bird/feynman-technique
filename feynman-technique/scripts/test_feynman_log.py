@@ -17,6 +17,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.path.join(HERE, "feynman_log.py")
 SESSION_SCRIPT = os.path.join(HERE, "feynman_session.py")
 HOOK_SCRIPT = os.path.join(HERE, "feynman_hook.py")
+GALLERY_SCRIPT = os.path.join(HERE, "build_gallery.py")
+INSTALL_HOOKS_SCRIPT = os.path.join(HERE, "install_hooks.py")
+DOCS_DIR = os.path.join(HERE, "..", "..", "docs")
+GALLERY_ZH = os.path.join(DOCS_DIR, "gallery-data.js")
+GALLERY_EN = os.path.join(DOCS_DIR, "gallery-data-en.js")
+FAKE_HOME = "/tmp/feynman-fake-home"
 LOG_FILE = os.path.join(HERE, "..", "sessions", "log.jsonl")
 STATE_FILE = os.path.join(HERE, "..", "sessions", "active_session.json")
 STATE_BACKUP = STATE_FILE + ".test-backup"
@@ -307,6 +313,94 @@ def test_session_abort():
         raise CLIError("abort 后状态文件未清除")
 
 
+def run_cli_env(args, expect_patterns, env_extra, script, expected_exit=0):
+    """带环境变量覆盖的 run_cli 变体。"""
+    child = pexpect.spawn(
+        sys.executable,
+        [script] + args,
+        encoding="utf-8",
+        timeout=30,
+        env={**os.environ, **env_extra},
+    )
+    try:
+        for desc, pattern in expect_patterns:
+            index = child.expect([pattern, pexpect.EOF, pexpect.TIMEOUT])
+            if index == 1:
+                raise CLIEOFError(f"[{desc}] 提前退出: {child.before!r}", child=child)
+            if index == 2:
+                raise CLITimeoutError(f"[{desc}] 超时: {child.before!r}", child=child)
+        child.expect([pexpect.EOF, pexpect.TIMEOUT])
+        child.close()
+        if child.exitstatus != expected_exit:
+            raise CLIError(f"退出码 {child.exitstatus}，期望 {expected_exit}", child=child)
+        return child.before
+    finally:
+        shutdown(child)
+
+
+def test_build_gallery():
+    """gallery 构建：中英文拆分 + 英文转写稿（半角冒号）解析回归。"""
+    # 英文会话：半角冒号格式转写稿（回归全角/半角 bug）
+    transcript = "/tmp/feynman-test-en-transcript.md"
+    with open(transcript, "w", encoding="utf-8") as f:
+        f.write("# Entropy · Feynman Session\n\n"
+                "**You**: Entropy is disorder.\n\n"
+                "**Listener**: What does 'disorder' mean exactly?\n")
+    run_cli(["log", "--concept", "TestEntropy", "--rounds", "5", "--passed", "false",
+             "--score", "2", "--transcript", transcript],
+            [("英文记录", r"已记录：.*TestEntropy")])
+    run_cli([], [("中文输出", r"gallery-data\.js.*场对话"),
+                 ("英文输出", r"gallery-data-en\.js.*场对话")],
+            script=GALLERY_SCRIPT)
+    for path in (GALLERY_ZH, GALLERY_EN):
+        if not os.path.isfile(path):
+            raise CLIError(f"gallery 数据未生成：{path}")
+    zh = open(GALLERY_ZH, encoding="utf-8").read()
+    en = open(GALLERY_EN, encoding="utf-8").read()
+    if "测试概念" not in zh:
+        raise CLIError("中文 gallery 缺少中文会话")
+    if "测试概念" in en:
+        raise CLIError("英文 gallery 混入了中文会话")
+    if "TestEntropy" not in en or '"who": "you"' not in en or '"who": "listener"' not in en:
+        raise CLIError("英文转写稿（半角冒号）未解析出消息")
+    if "TestEntropy" in zh:
+        raise CLIError("中文 gallery 混入了英文会话")
+    os.remove(transcript)
+
+
+def test_install_hooks():
+    """钩子安装器：HOME 隔离下安装/幂等/卸载，TOML 合法。"""
+    shutil.rmtree(FAKE_HOME, ignore_errors=True)
+    os.makedirs(FAKE_HOME, exist_ok=True)
+    env = {"HOME": FAKE_HOME}
+    run_cli_env([], [("三 agent 安装", r"claude.*安装完成[\s\S]*codex.*安装完成[\s\S]*kimi.*安装完成")],
+                env, INSTALL_HOOKS_SCRIPT)
+    configs = {
+        "claude": os.path.join(FAKE_HOME, ".claude", "settings.json"),
+        "codex": os.path.join(FAKE_HOME, ".codex", "config.toml"),
+        "kimi": os.path.join(FAKE_HOME, ".kimi-code", "config.toml"),
+    }
+    for name, path in configs.items():
+        if not os.path.isfile(path) or "feynman_hook" not in open(path, encoding="utf-8").read():
+            raise CLIError(f"{name} 配置未写入钩子")
+    # TOML 合法性
+    import tomllib
+    for name in ("codex", "kimi"):
+        with open(configs[name], "rb") as f:
+            tomllib.load(f)
+    # 幂等：重复安装无重复条目
+    run_cli_env([], [("重复安装", r"安装完成")], env, INSTALL_HOOKS_SCRIPT)
+    for name, path in configs.items():
+        if open(path, encoding="utf-8").read().count("feynman_hook.py") != 1:
+            raise CLIError(f"{name} 重复安装产生了重复条目")
+    # 卸载
+    run_cli_env(["--uninstall"], [("卸载", r"卸载完成")], env, INSTALL_HOOKS_SCRIPT)
+    for name, path in configs.items():
+        if os.path.isfile(path) and "feynman_hook" in open(path, encoding="utf-8").read():
+            raise CLIError(f"{name} 卸载后仍残留钩子")
+    shutil.rmtree(FAKE_HOME, ignore_errors=True)
+
+
 TESTS = [
     test_log_success,
     test_log_history_trend,
@@ -324,6 +418,8 @@ TESTS = [
     test_hook_malformed,
     test_session_flow,
     test_session_abort,
+    test_build_gallery,
+    test_install_hooks,
 ]
 
 
@@ -341,6 +437,12 @@ def main():
     if had_state:
         shutil.copy2(STATE_FILE, STATE_BACKUP)
         os.remove(STATE_FILE)
+    # gallery 数据文件也备份（build_gallery 测试会重建它们）
+    gallery_backups = {}
+    for path in (GALLERY_ZH, GALLERY_EN):
+        if os.path.exists(path):
+            gallery_backups[path] = path + ".test-backup"
+            shutil.copy2(path, gallery_backups[path])
 
     passed, failed = 0, 0
     try:
@@ -370,6 +472,11 @@ def main():
         shutil.rmtree(EXPORT_TEST_DIR, ignore_errors=True)
         if os.path.exists("/tmp/feynman-test-transcript.md"):
             os.remove("/tmp/feynman-test-transcript.md")
+        if os.path.exists("/tmp/feynman-test-en-transcript.md"):
+            os.remove("/tmp/feynman-test-en-transcript.md")
+        shutil.rmtree(FAKE_HOME, ignore_errors=True)
+        for path, backup in gallery_backups.items():
+            shutil.move(backup, path)
 
     print(f"\n{passed} 通过，{failed} 失败")
     sys.exit(1 if failed else 0)
