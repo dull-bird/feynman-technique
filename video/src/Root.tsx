@@ -2,7 +2,7 @@ import { Composition } from "remotion";
 import { FeynmanIntro, FeynmanIntroEn } from "./Composition";
 import "./index.css";
 import timelineEn from "./timeline.en.json";
-import timelineXhs from "./timeline.xhs.json";
+import timelineXhs from "./timeline.xhs2.json";
 import timelineZh from "./timeline.zh.json";
 import { FeynmanXhs } from "./Xhs";
 

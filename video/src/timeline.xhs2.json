@@ -1,0 +1,91 @@
+{
+  "fps": 30,
+  "totalFrames": 3713,
+  "totalDurationSec": 123.76666666666667,
+  "scenes": [
+    {
+      "id": "hook",
+      "startFrame": 0,
+      "durationFrames": 339,
+      "audioStartSec": 0.2,
+      "audioDurSec": 10.296
+    },
+    {
+      "id": "pretend",
+      "startFrame": 339,
+      "durationFrames": 240,
+      "audioStartSec": 11.5,
+      "audioDurSec": 6.989219
+    },
+    {
+      "id": "act1",
+      "startFrame": 579,
+      "durationFrames": 239,
+      "audioStartSec": 19.5,
+      "audioDurSec": 6.954406
+    },
+    {
+      "id": "act2",
+      "startFrame": 818,
+      "durationFrames": 242,
+      "audioStartSec": 27.466666666666665,
+      "audioDurSec": 7.035656
+    },
+    {
+      "id": "act3",
+      "startFrame": 1060,
+      "durationFrames": 307,
+      "audioStartSec": 35.53333333333334,
+      "audioDurSec": 9.206719
+    },
+    {
+      "id": "act4",
+      "startFrame": 1367,
+      "durationFrames": 395,
+      "audioStartSec": 45.76666666666667,
+      "audioDurSec": 12.155656
+    },
+    {
+      "id": "act5",
+      "startFrame": 1762,
+      "durationFrames": 343,
+      "audioStartSec": 58.93333333333334,
+      "audioDurSec": 10.404
+    },
+    {
+      "id": "verdict",
+      "startFrame": 2105,
+      "durationFrames": 128,
+      "audioStartSec": 70.36666666666667,
+      "audioDurSec": 3.239188
+    },
+    {
+      "id": "reveal",
+      "startFrame": 2233,
+      "durationFrames": 463,
+      "audioStartSec": 74.63333333333334,
+      "audioDurSec": 14.419594
+    },
+    {
+      "id": "system",
+      "startFrame": 2696,
+      "durationFrames": 413,
+      "audioStartSec": 90.06666666666666,
+      "audioDurSec": 12.747781
+    },
+    {
+      "id": "usage",
+      "startFrame": 3109,
+      "durationFrames": 391,
+      "audioStartSec": 103.83333333333334,
+      "audioDurSec": 12.027938
+    },
+    {
+      "id": "cta",
+      "startFrame": 3500,
+      "durationFrames": 213,
+      "audioStartSec": 116.86666666666667,
+      "audioDurSec": 6.09525
+    }
+  ]
+}

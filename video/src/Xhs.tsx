@@ -1,34 +1,45 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import { SceneFade } from "./components/Chalk";
-import { GapScene, StepsScene } from "./scenes/xhs/StepsGapScene";
-import { HookScene } from "./scenes/xhs/HookScene";
-import { PainScene, StandardScene } from "./scenes/xhs/PainStandardScene";
-import { ProductScene } from "./scenes/xhs/ProductScene";
+import {
+  Act1Scene,
+  Act2Scene,
+  Act3Scene,
+  Act4Scene,
+  Act5Scene,
+} from "./scenes/xhs2/ActScenes";
+import { HookScene, PretendScene } from "./scenes/xhs2/HookPretendScene";
 import {
   CtaScene,
-  RecordScene,
-  RulesScene,
-} from "./scenes/xhs/RulesRecordCtaScene";
-import timeline from "./timeline.xhs.json";
+  SystemScene,
+  UsageScene,
+} from "./scenes/xhs2/SystemUsageCtaScene";
+import {
+  RevealScene,
+  VerdictScene,
+} from "./scenes/xhs2/VerdictRevealScene";
+import timeline from "./timeline.xhs2.json";
 
-// 小红书竖屏版（1080x1920）：旁白驱动，窗口由 narration/build_xhs.mjs 反推
+// 小红书竖屏版 v2（1080x1920）：真实双 AI 对话主线，旁白驱动
 const SCENES: Record<string, React.FC> = {
   hook: HookScene,
-  pain: PainScene,
-  standard: StandardScene,
-  steps: StepsScene,
-  gap: GapScene,
-  product: ProductScene,
-  rules: RulesScene,
-  record: RecordScene,
+  pretend: PretendScene,
+  act1: Act1Scene,
+  act2: Act2Scene,
+  act3: Act3Scene,
+  act4: Act4Scene,
+  act5: Act5Scene,
+  verdict: VerdictScene,
+  reveal: RevealScene,
+  system: SystemScene,
+  usage: UsageScene,
   cta: CtaScene,
 };
 
 export const FeynmanXhs: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: "#1A2E26" }}>
-      <Audio src={staticFile("narration-xhs.mp3")} />
+      <Audio src={staticFile("narration-xhs2.mp3")} />
       {timeline.scenes.map((s) => {
         const Scene = SCENES[s.id];
         return (
