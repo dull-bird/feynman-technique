@@ -453,7 +453,7 @@ def test_relay():
     run_cli(["start", "--concept", "接力概念", "--prep", PREP_FILE],
             [("开场", r"会话已开场：接力概念")], script=SESSION_SCRIPT)
     run_cli(["turn", ""],
-            [("首轮开场白", r"准备好当你的费曼听众了")],
+            [("首轮开场白", r"费曼教学法练习开始")],
             script=RELAY_SCRIPT)
     run_cli(["turn", "复利就是钱生钱", "--process", stub],
             [("接力回复", r"「生」具体是什么意思")],

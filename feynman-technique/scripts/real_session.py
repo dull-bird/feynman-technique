@@ -25,7 +25,7 @@ import pexpect
 HERE = os.path.dirname(os.path.abspath(__file__))
 METHOD_MD = os.path.join(HERE, "..", "references", "method.md")
 
-LISTENER_OPENING = "准备好当你的费曼听众了。请从最基础的地方开始讲。"
+LISTENER_OPENING = "费曼教学法练习开始：把我当初学者，从最基础的地方讲你的概念。我手上有答案，随时会向你提问。"
 
 LISTENER_PERSONA = """你是一场费曼学习法对话的听众。规则（必须严格遵守）：
 1. 你是零基础但逻辑严谨的听众。用户负责讲，你只负责复述和追问，绝不替用户讲完。
