@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1920px;
+    font-family: "Noto Serif SC", "Songti SC", serif;
+    background:
+      repeating-linear-gradient(transparent 0, transparent 118px, #DDD6C2 118px, #DDD6C2 120px),
+      linear-gradient(to right, transparent 0, transparent 130px, rgba(214,69,51,0.5) 130px, rgba(214,69,51,0.5) 132px, transparent 132px),
+      #FBF8EF;
+    position: relative;
+    overflow: hidden;
+  }
+  .tape {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    width: 340px;
+    height: 90px;
+    transform: translateX(-50%) rotate(-2deg);
+    background: rgba(233,196,106,0.55);
+    border-left: 2px dashed rgba(26,46,38,0.25);
+    border-right: 2px dashed rgba(26,46,38,0.25);
+  }
+  .main {
+    position: absolute;
+    top: 430px;
+    left: 90px;
+    right: 90px;
+  }
+  .line1 {
+    font-size: 150px;
+    font-weight: 900;
+    color: #1A2E26;
+    line-height: 1.25;
+    letter-spacing: 2px;
+  }
+  .strike {
+    position: relative;
+    white-space: nowrap;
+  }
+  .strike::after {
+    content: "";
+    position: absolute;
+    left: -3%;
+    top: 54%;
+    width: 106%;
+    height: 16px;
+    background: #D64533;
+    border-radius: 8px;
+    transform: rotate(-1.5deg);
+  }
+  .line2 {
+    margin-top: 60px;
+    font-size: 128px;
+    font-weight: 900;
+    color: #D64533;
+    line-height: 1.25;
+  }
+  .quiz {
+    position: absolute;
+    top: 1230px;
+    left: 90px;
+    right: 90px;
+    font-size: 64px;
+    color: #1A2E26;
+    font-family: "Noto Sans SC", sans-serif;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .quiz .q {
+    display: inline-block;
+    border: 5px solid #D64533;
+    border-radius: 18px;
+    padding: 6px 28px;
+    color: #D64533;
+    font-weight: 700;
+    transform: rotate(-1deg);
+  }
+  .bottom {
+    position: absolute;
+    bottom: 130px;
+    left: 90px;
+    right: 90px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .logo {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: #1A2E26;
+    color: #E9C46A;
+    display: grid;
+    place-items: center;
+    font-family: "Zhi Mang Xing", "Kaiti SC", cursive;
+    font-size: 64px;
+    transform: rotate(-6deg);
+    flex-shrink: 0;
+  }
+  .brand {
+    font-size: 52px;
+    font-weight: 700;
+    color: #1A2E26;
+    line-height: 1.4;
+  }
+  .brand small {
+    display: block;
+    font-size: 36px;
+    font-weight: 400;
+    color: #7FA08C;
+    font-family: "Noto Sans SC", sans-serif;
+  }
+</style>
+</head>
+<body>
+  <div class="tape"></div>
+  <div class="main">
+    <div class="line1">我<span class="strike">以为</span>我懂复利，</div>
+    <div class="line2">直到 AI 问了我<br>8 个问题</div>
+  </div>
+  <div class="quiz">
+    自测：<span class="q">1000 块 × 7% × 40 年 = ？</span><br>
+    答不上来？那你也不懂复利
+  </div>
+  <div class="bottom">
+    <div class="logo">?</div>
+    <div class="brand">费曼技巧 · AI 陪练<small>你讲它问，直到真懂</small></div>
+  </div>
+</body>
+</html>
