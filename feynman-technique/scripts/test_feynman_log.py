@@ -19,6 +19,7 @@ SESSION_SCRIPT = os.path.join(HERE, "feynman_session.py")
 HOOK_SCRIPT = os.path.join(HERE, "feynman_hook.py")
 GALLERY_SCRIPT = os.path.join(HERE, "build_gallery.py")
 INSTALL_HOOKS_SCRIPT = os.path.join(HERE, "install_hooks.py")
+RELAY_SCRIPT = os.path.join(HERE, "feynman_relay.py")
 DOCS_DIR = os.path.join(HERE, "..", "..", "docs")
 GALLERY_ZH = os.path.join(DOCS_DIR, "gallery-data.js")
 GALLERY_EN = os.path.join(DOCS_DIR, "gallery-data-en.js")
@@ -442,6 +443,28 @@ def test_install_hooks():
     shutil.rmtree(FAKE_HOME, ignore_errors=True)
 
 
+def test_relay():
+    """盲测接力：开场白 → stub 听众台词 → 无会话时拒绝。"""
+    stub = "/tmp/feynman-fake-listener.sh"
+    with open(stub, "w", encoding="utf-8") as f:
+        f.write("#!/bin/bash\necho '你说的「钱生钱」里，「生」具体是什么意思？'\n")
+    os.chmod(stub, 0o755)
+    write_prep()
+    run_cli(["start", "--concept", "接力概念", "--prep", PREP_FILE],
+            [("开场", r"会话已开场：接力概念")], script=SESSION_SCRIPT)
+    run_cli(["turn", ""],
+            [("首轮开场白", r"准备好当你的费曼听众了")],
+            script=RELAY_SCRIPT)
+    run_cli(["turn", "复利就是钱生钱", "--process", stub],
+            [("接力回复", r"「生」具体是什么意思")],
+            script=RELAY_SCRIPT)
+    run_cli(["abort"], [("清理", r"已放弃")], script=SESSION_SCRIPT)
+    run_cli(["turn", "随便说点什么", "--process", stub],
+            [("无会话拒绝", r"没有进行中的会话")],
+            expected_exit=2, script=RELAY_SCRIPT)
+    os.remove(stub)
+
+
 TESTS = [
     test_log_success,
     test_log_history_trend,
@@ -460,6 +483,7 @@ TESTS = [
     test_session_flow,
     test_session_abort,
     test_session_gates,
+    test_relay,
     test_build_gallery,
     test_install_hooks,
 ]

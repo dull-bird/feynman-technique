@@ -9,6 +9,7 @@
   - `references/method.md` — 听众规则、准备义务、评分标准
   - `scripts/feynman_log.py` — 日志与报告（`log` / `report` / `export`，仅标准库）
   - `scripts/feynman_session.py` — 会话状态机（`start` / `round` / `status` / `close` / `abort`，仅标准库）
+  - `scripts/feynman_relay.py` — 盲测接力器（prep 不进主对话，进程兜底调听众 CLI）
   - `scripts/feynman_hook.py` — UserPromptSubmit 自动触发钩子（仅标准库）
   - `scripts/install_hooks.py` — 三 agent 钩子安装器（Claude Code / Codex / Kimi）
   - `scripts/test_feynman_log.py` — pexpect 端到端测试（需 `.venv` 里的 pexpect）

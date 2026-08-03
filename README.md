@@ -40,6 +40,7 @@ python3 ~/.agents/skills/feynman-technique/scripts/install_hooks.py --uninstall
   - `references/method.md` — 听众规则、五岁小孩测试、1–5 分评分标准、常见错误
   - `scripts/feynman_log.py` — 对话日志与进度报告（`log` / `report` / `export` 子命令，仅标准库）
   - `scripts/feynman_session.py` — 会话状态机（`start` / `round` / `status` / `close` / `abort`，流程纪律兜底）
+  - `scripts/feynman_relay.py` — 盲测接力器（prep 不进主对话，进程兜底调听众 CLI）
   - `scripts/test_feynman_log.py` — pexpect 端到端测试
   - `scripts/build_gallery.py` — 从真实记录生成网站 gallery 数据
 - `sessions/` — 本地对话记录（不入库）
