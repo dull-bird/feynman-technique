@@ -4,6 +4,7 @@ import "./index.css";
 import timelineEn from "./timeline.en.json";
 import timelineXhs from "./timeline.xhs2.json";
 import timelineZh from "./timeline.zh.json";
+import { FeynmanVertical } from "./Vertical";
 import { FeynmanXhs } from "./Xhs";
 
 export const RemotionRoot: React.FC = () => {
@@ -29,6 +30,14 @@ export const RemotionRoot: React.FC = () => {
         id="FeynmanXhs"
         component={FeynmanXhs}
         durationInFrames={timelineXhs.totalFrames}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
+      <Composition
+        id="FeynmanVertical"
+        component={FeynmanVertical}
+        durationInFrames={timelineZh.totalFrames}
         fps={30}
         width={1080}
         height={1920}
