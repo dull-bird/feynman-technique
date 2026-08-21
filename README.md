@@ -1,6 +1,8 @@
-# 费曼技巧 Feynman Technique（feynman-technique）
+# 费曼技巧 Feynman Technique
 
 [English README](README.en.md)
+
+**把「我以为我懂」讲成「我知道我懂」。**
 
 一个住在你终端里的费曼学习法 AI 陪练 skill：你讲，它问。AI 扮演零基础但逻辑严谨的听众，连续追问、暴露知识盲区，并把每次对话记录到本地日志追踪进步。
 
@@ -12,11 +14,14 @@
 npx skills add dull-bird/feynman-technique -g
 ```
 
+（npx skills 只装 feynman-technique 本体；图表功能依赖 excalidraw-loop，需按下方手动方式补装。）
+
 或者手动安装：
 
 ```bash
 git clone https://github.com/dull-bird/feynman-technique.git
 cp -r feynman-technique/feynman-technique ~/.agents/skills/feynman-technique
+cp -r feynman-technique/excalidraw-loop ~/.agents/skills/excalidraw-loop   # 图表功能依赖
 ```
 
 然后对你的 agent 说：「用费曼学习法，概念是 XX」。
@@ -39,12 +44,16 @@ python3 ~/.agents/skills/feynman-technique/scripts/install_hooks.py --uninstall
   - `SKILL.md` — 会话流程：启动 → 追问 → 盲区处理 → 通过判定 → 记录 → 查进度
   - `references/method.md` — 听众规则、五岁小孩测试、1–5 分评分标准、常见错误
   - `scripts/feynman_log.py` — 对话日志与进度报告（`log` / `report` / `export` 子命令，仅标准库）
-  - `scripts/feynman_session.py` — 会话状态机（`start` / `round` / `status` / `close` / `abort`，流程纪律兜底）
-  - `scripts/feynman_relay.py` — 盲测接力器（prep 不进主对话，进程兜底调听众 CLI）
+  - `scripts/feynman_session.py` — 会话状态机（`start` / `round` / `status` / `close` / `abort` / `schema`，流程纪律兜底；支持多场并行，`--session` 按会话 ID 区分）
+  - `scripts/feynman_relay.py` — 盲测接力器（`turn` 逐轮接力 / `answer` 临场查证回路 / `teach` 角色反转讲解；prep 不进主对话，进程兜底调听众 CLI）
+  - `scripts/feynman_figure.py` — 画图闭环（`open` 打开 excalidraw 画布 / `wait` 自动接收导出，仅标准库）
+  - `scripts/feynman_hook.py` + `install_hooks.py` — UserPromptSubmit 自动触发钩子与三 agent 安装器
+  - `scripts/real_session.py` + `clean_transcript.py` + `run_dual_batch.sh` — 双 agent 实测工具（实验性）
   - `scripts/test_feynman_log.py` — pexpect 端到端测试
   - `scripts/build_gallery.py` — 从真实记录生成网站 gallery 数据
-- `sessions/` — 本地对话记录（不入库）
+- `feynman-technique/sessions/` — 本地对话记录（不入库）
 - `docs/` — GitHub Pages 网站（含真实对话 gallery）
+- `excalidraw-loop/` — 独立 skill：Excalidraw 协作闭环（AI 搭积木留空位 → 用户拖拽补全 → AI 读回差异，仅标准库）
 - `video/` — Remotion 短片源码（产物在 `docs/assets/feynman-intro.mp4`）
 
 ## 导出到 Obsidian
@@ -68,7 +77,7 @@ git config core.hooksPath .githooks
 python3 feynman-technique/scripts/build_gallery.py
 ```
 
-学习记录（`sessions/`）不入库；gallery 展示数据由构建脚本从真实记录生成，随每次提交自动更新。
+学习记录（`feynman-technique/sessions/`）不入库；gallery 展示数据由构建脚本从真实记录生成，随每次提交自动更新。
 
 ## 方法
 

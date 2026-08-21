@@ -10,6 +10,7 @@
 import json
 import os
 import re
+import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.join(HERE, "..")
@@ -34,6 +35,40 @@ CONCEPT_DOMAINS = {
 MSG_RE = re.compile(r"^\*\*(你|听众|You|Listener)\*\*[:：](.*)$")
 ROLE_MAP = {"你": "you", "听众": "listener", "You": "you", "Listener": "listener"}
 CJK_RE = re.compile(r"[一-鿿]")
+
+# 测试残留过滤：429 报错、agent 元信息、结尾 JSON 判定，整段丢弃
+NOISE_DROP_RE = re.compile(
+    r"rate_limit|too many requests|操作员|误触|关于现状的事实|"
+    r'"verdict"|"listener_note"|讲解者元描述泄露'
+)
+# 思考过程泄露：正文前混有英文元指令，剥到首个中文开头的行为止
+LEAK_RE = re.compile(
+    r"I'm the |Stay in |in persona|in character|元描述|"
+    r"【确定知道】|【模糊】|【不知道】"
+)
+ANSWER_START_RE = re.compile(r"^\s*[一-鿿「]")
+
+
+def clean_messages(messages):
+    """剔除测试残留消息，并剥掉正文前的思考/元指令泄露。"""
+    cleaned = []
+    for m in messages:
+        text = m["text"]
+        if NOISE_DROP_RE.search(text):
+            continue
+        if LEAK_RE.search(text):
+            lines = text.split("\n")
+            for k, line in enumerate(lines):
+                if ANSWER_START_RE.match(line):
+                    text = "\n".join(lines[k:]).strip()
+                    break
+            else:
+                continue  # 整段都是元信息，没有正文
+            if not text:
+                continue
+            m = dict(m, text=text)
+        cleaned.append(m)
+    return cleaned
 
 
 def is_chinese(text):
@@ -65,10 +100,20 @@ OUT_FILE_EN = os.path.join(REPO_ROOT, "docs", "gallery-data-en.js")
 
 
 def main():
+    if not os.path.exists(LOG_FILE):
+        # sessions/ 不入库；没有源数据时直接退出，避免把已提交的 gallery 清空
+        print(f"未找到 {LOG_FILE}，跳过生成（保留现有 gallery 数据）")
+        return
     records = []
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, encoding="utf-8") as f:
-            records = [json.loads(line) for line in f if line.strip()]
+    with open(LOG_FILE, encoding="utf-8") as f:
+        for ln, line in enumerate(f, 1):
+            if not line.strip():
+                continue
+            try:
+                records.append(json.loads(line))
+            except json.JSONDecodeError:
+                # 与 feynman_log.load_records 一致：坏行警告跳过，不崩
+                print(f"警告：跳过无法解析的行 {ln}", file=sys.stderr)
 
     all_sessions = []
     for r in records:
@@ -76,7 +121,7 @@ def main():
         if r.get("transcript"):
             tpath = os.path.join(TRANSCRIPTS_DIR, r["transcript"])
             if os.path.isfile(tpath):
-                messages = parse_transcript(tpath)
+                messages = clean_messages(parse_transcript(tpath))
         domains = CONCEPT_DOMAINS.get(r["concept"], ("其他", "Other"))
         all_sessions.append({
             "domain_zh": domains[0],

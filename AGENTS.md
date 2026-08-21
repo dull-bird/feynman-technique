@@ -8,14 +8,17 @@
   - `SKILL.md` — 会话流程（准备→追问→盲区→判定→记录→查进度→导出）
   - `references/method.md` — 听众规则、准备义务、评分标准
   - `scripts/feynman_log.py` — 日志与报告（`log` / `report` / `export`，仅标准库）
-  - `scripts/feynman_session.py` — 会话状态机（`start` / `round` / `status` / `close` / `abort`，仅标准库）
-  - `scripts/feynman_relay.py` — 盲测接力器（prep 不进主对话，进程兜底调听众 CLI）
+  - `scripts/feynman_session.py` — 会话状态机（`start` / `round` / `status` / `close` / `abort` / `schema`，仅标准库；多场并行时状态存 `sessions/active/<ID>.json`，各命令 `--session` 区分）
+  - `scripts/feynman_relay.py` — 盲测接力器（`turn` / `answer` / `teach`，prep 不进主对话，进程兜底调听众 CLI）
+  - `scripts/feynman_figure.py` — 画图闭环（`open` 打开 excalidraw 画布 / `wait` 监听 `sessions/figures/` 接收导出，仅标准库）
   - `scripts/feynman_hook.py` — UserPromptSubmit 自动触发钩子（仅标准库）
   - `scripts/install_hooks.py` — 三 agent 钩子安装器（Claude Code / Codex / Kimi）
+  - `scripts/real_session.py` / `clean_transcript.py` / `run_dual_batch.sh` — 双 agent 实测工具（实验性，产出需人工筛选后才进 gallery）
   - `scripts/test_feynman_log.py` — pexpect 端到端测试（需 `.venv` 里的 pexpect）
-  - `scripts/build_gallery.py` — 从 `sessions/` 生成 `docs/gallery-data.js`
-- `sessions/` — 本地学习记录（**不入库**，gitignored）
+  - `scripts/build_gallery.py` — 从 `feynman-technique/sessions/` 生成 `docs/gallery-data.js`（无源数据时跳过，不清空产物）
+- `feynman-technique/sessions/` — 本地学习记录（**不入库**，gitignored）
 - `docs/` — GitHub Pages 网站（`index.html` 中文版 / `en/index.html` 英文版 / `styles.css` / `main.js`（按 `html lang` 切换 UI 文案）/ `gallery-data.js` / `assets/`）
+- `excalidraw-loop/` — 独立 skill：Excalidraw 协作闭环（`seed` AI 搭积木留空位 → 用户拖拽补全 → `diff` 读回结构差异；`live` 实时画布编辑即落盘）。**feynman-technique 的图表功能依赖它**；本机开发改动后记得 rsync 到 `~/.agents/skills/`（排除 `sessions/` 与 `__pycache__`）。`canvas/` 是实时画布前端（vite 构建，产物 `canvas/dist` 入库，node_modules 不入库）
 - `video/` — Remotion 视频源码（产物渲染到 `docs/assets/feynman-intro.mp4`）
 
 ## 铁律：每次修改都要检查三处联动
@@ -30,8 +33,8 @@
 
 ## 开发规则
 
-- **提交前**：pre-commit 钩子自动跑 `test_feynman_log.py` 并重建 `docs/gallery-data.js`（`git config core.hooksPath .githooks` 启用）。测试失败不许提交
-- **测试**：`.venv/bin/python feynman-technique/scripts/test_feynman_log.py`，全绿才算完
+- **提交前**：pre-commit 钩子自动跑 `test_feynman_log.py` + `excalidraw-loop/scripts/test_excalidraw_loop.py` 并重建 `docs/gallery-data.js`（`git config core.hooksPath .githooks` 启用）。测试失败不许提交
+- **测试**：`.venv/bin/python feynman-technique/scripts/test_feynman_log.py`（pexpect e2e）与 `python3 excalidraw-loop/scripts/test_excalidraw_loop.py`（stdlib unittest），全绿才算完
 - **测试隔离**：测试会备份恢复 `sessions/log.jsonl` 与 `sessions/transcripts/`，不得污染真实学习记录
 - **依赖**：Python 脚本只用标准库（pexpect 测试除外，装在 `.venv/`）；不引入新依赖
 - **设计令牌**：ink `#1A2E26` / paper `#F7F3E9` / chalk `#F2EFE4` / yellow `#E9C46A` / red `#D64533` / sage `#7FA08C`；标题 Noto Serif SC，正文 Noto Sans SC，短批注 Zhi Mang Xing（长句禁用手写体），代码 JetBrains Mono

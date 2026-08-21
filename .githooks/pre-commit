@@ -13,6 +13,9 @@ fi
 echo "pre-commit: 运行 feynman_log 端到端测试…"
 "$VENV_PY" feynman-technique/scripts/test_feynman_log.py
 
+echo "pre-commit: 运行 excalidraw-loop 测试…"
+"$VENV_PY" excalidraw-loop/scripts/test_excalidraw_loop.py
+
 echo "pre-commit: 重建 gallery 数据…"
 "$VENV_PY" feynman-technique/scripts/build_gallery.py
 git add docs/gallery-data.js
